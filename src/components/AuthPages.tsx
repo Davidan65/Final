@@ -36,6 +36,7 @@ export const LoginPage: React.FC = () => {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
+        credentials: 'include',
         body: JSON.stringify(formData)
       });
 
@@ -147,6 +148,7 @@ export const SignupPage: React.FC = () => {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
+        credentials: 'include',
         body: JSON.stringify(formData)
       });
 
