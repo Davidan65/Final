@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: final-frontend
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npm run preview
+    envVars:
+      - key: VITE_API_URL
+        value: https://final-1-c87g.onrender.com/api
+
+  - type: web
+    name: final-backend
+    env: node
+    buildCommand: cd src/server && npm install
+    startCommand: node src/server/server.js
+    envVars:
+      - key: MONGODB_URI
+        value: mongodb+srv://dave880:15935708@cluster0.ucau26i.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      - key: JWT_SECRET
+        value: mysdfgvfd45664332rtyhrde345532
