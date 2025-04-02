@@ -16,7 +16,12 @@ dotenv.config({ path: join(__dirname, '.env') });
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production' 
+    ? 'https://final-2-1yn4.onrender.com'
+    : 'http://localhost:5173',
+  credentials: true
+}));
 app.use(express.json());
 
 // MongoDB Connection
@@ -87,7 +92,7 @@ const auth = async (req, res, next) => {
 };
 
 // Routes
-app.post('/api/signup', async (req, res) => {
+app.post('/auth/signup', async (req, res) => {
   try {
     const { email, password } = req.body;
     
@@ -121,7 +126,7 @@ app.post('/api/signup', async (req, res) => {
   }
 });
 
-app.post('/api/login', async (req, res) => {
+app.post('/auth/login', async (req, res) => {
   try {
     const { email, password } = req.body;
     
