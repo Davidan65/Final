@@ -16,7 +16,12 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: ['https://final-frontend.onrender.com', 'http://localhost:5173', 'https://final-2-1yn4.onrender.com'],
+  methods: ['GET', 'POST'],
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
 // MongoDB Connection
@@ -111,6 +116,10 @@ app.post('/api/auth/login', async (req, res) => {
     console.error('Login error:', error);
     res.status(500).json({ error: 'Error logging in' });
   }
+});
+
+app.get('/api', (req, res) => {
+  res.json({ message: 'API is working!' });
 });
 
 const PORT = process.env.PORT || 5000;
