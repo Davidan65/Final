@@ -24,6 +24,12 @@ app.use(cors({
 }));
 app.use(express.json());
 
+// Add logging middleware
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+  next();
+});
+
 // MongoDB Connection
 if (!process.env.MONGODB_URI) {
   console.error('MONGODB_URI is not defined in environment variables');
@@ -119,7 +125,13 @@ app.post('/api/auth/login', async (req, res) => {
 });
 
 app.get('/api', (req, res) => {
+  console.log('Test route hit');
   res.json({ message: 'API is working!' });
+});
+
+app.get('/', (req, res) => {
+  console.log('Root route hit');
+  res.json({ message: 'Server is running!' });
 });
 
 const PORT = process.env.PORT || 5000;
