@@ -8,8 +8,8 @@ interface AuthFormData {
   password: string;
 }
 
-// Remove the /api suffix as it's already included in the environment variable
-const API_URL = import.meta.env.VITE_API_URL || 'https://final-2-1yn4.onrender.com';
+// Use the base URL without /api suffix since it's already included in the environment variable
+const API_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'https://final-2-1yn4.onrender.com';
 
 export const LoginPage: React.FC = () => {
   const [formData, setFormData] = useState<AuthFormData>({ email: '', password: '' });

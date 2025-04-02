@@ -20,7 +20,11 @@ app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
     ? 'https://final-2-1yn4.onrender.com'
     : 'http://localhost:5173',
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+  exposedHeaders: ['Content-Length', 'Authorization'],
+  maxAge: 86400 // 24 hours
 }));
 app.use(express.json());
 
