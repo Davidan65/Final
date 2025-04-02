@@ -9,7 +9,6 @@ export default defineConfig({
     exclude: ['lucide-react'],
   },
   server: {
-    port: 10000, // Render expects port 10000
     host: true, // Expose to all network interfaces
   },
 });

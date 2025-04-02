@@ -8,6 +8,7 @@ interface AuthFormData {
   password: string;
 }
 
+// Remove the /api suffix as it's already included in the environment variable
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export const LoginPage: React.FC = () => {
@@ -28,13 +29,19 @@ export const LoginPage: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${API_URL}/login`, {
+      console.log('Attempting to login with API URL:', API_URL);
+      const response = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
         body: JSON.stringify(formData)
       });
 
+      console.log('Login response status:', response.status);
       const data = await response.json();
+      console.log('Login response data:', data);
 
       if (!response.ok) {
         throw new Error(data.error || 'Failed to login');
@@ -43,6 +50,7 @@ export const LoginPage: React.FC = () => {
       login(data.token);
       navigate(redirectPath);
     } catch (err) {
+      console.error('Login error:', err);
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setIsLoading(false);
@@ -132,13 +140,19 @@ export const SignupPage: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${API_URL}/signup`, {
+      console.log('Attempting to signup with API URL:', API_URL);
+      const response = await fetch(`${API_URL}/auth/signup`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
         body: JSON.stringify(formData)
       });
 
+      console.log('Signup response status:', response.status);
       const data = await response.json();
+      console.log('Signup response data:', data);
 
       if (!response.ok) {
         throw new Error(data.error || 'Failed to sign up');
@@ -147,6 +161,7 @@ export const SignupPage: React.FC = () => {
       login(data.token);
       navigate('/');
     } catch (err) {
+      console.error('Signup error:', err);
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setIsLoading(false);
