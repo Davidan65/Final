@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/pet-store/', // Replace with your GitHub repository name
+  base: '/', // Remove /pet-store/ since we're deploying to root
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
