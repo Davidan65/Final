@@ -24,7 +24,8 @@ app.use(cors({
       'https://final-2-1yn4.onrender.com',
       'https://final-frontend-2.onrender.com',
       'https://final-frontend-2.onrender.com',
-      'https://final-2-1yn4.onrender.com'
+      'https://final-2-1yn4.onrender.com',
+      'https://frondend-tl1w.onrender.com'
     ];
     
     // Allow requests with no origin (like mobile apps or curl requests)
