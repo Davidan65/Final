@@ -30,12 +30,6 @@ export const LoginPage: React.FC = () => {
     e.preventDefault();
     setError('');
     
-    // Validate passwords match
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
-      return;
-    }
-    
     setIsLoading(true);
 
     try {
@@ -161,12 +155,6 @@ export const SignupPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    
-    // Validate passwords match
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
-      return;
-    }
     
     setIsLoading(true);
 
