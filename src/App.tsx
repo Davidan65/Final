@@ -4,6 +4,7 @@ import { CartProvider } from './contexts/CartContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { HashRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import { LoginPage, SignupPage } from './components/AuthPages';
+import { Footer } from './components/Footer';
 
 import { CheckoutPage } from './components/CheckoutPage';
 import { AboutPage } from './components/AboutPage';
@@ -766,6 +767,9 @@ function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
+      
+      {/* Footer */}
+      <Footer />
     </div>
     </CartProvider>
     </Router>
