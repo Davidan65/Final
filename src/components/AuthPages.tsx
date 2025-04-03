@@ -30,7 +30,7 @@ export const LoginPage: React.FC = () => {
 
     try {
       console.log('Attempting to login with API URL:', API_URL);
-      const response = await fetch(`${API_URL}/auth/login`, {
+      const response = await fetch(`${API_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -142,7 +142,7 @@ export const SignupPage: React.FC = () => {
 
     try {
       console.log('Attempting to signup with API URL:', API_URL);
-      const response = await fetch(`${API_URL}/auth/signup`, {
+      const response = await fetch(`${API_URL}/api/auth/signup`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
