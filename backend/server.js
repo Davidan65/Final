@@ -18,14 +18,16 @@ const app = express();
 // Middleware
 app.use(cors({
   origin: function(origin, callback) {
-    const allowedOrigins = ['https://final-frontend.onrender.com', 'http://localhost:5173', 'https://final-2-1yn4.onrender.com'];
+    const allowedOrigins = ['https://final-frontend.onrender.com', 'http://localhost:5173', 'https://final-2-1yn4.onrender.com', 'https://final-frontend-2.onrender.com'];
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
+      console.log('Blocked origin:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
+  optionsSuccessStatus: 200,
   methods: ['GET', 'POST', 'OPTIONS'],
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization', 'Accept']
