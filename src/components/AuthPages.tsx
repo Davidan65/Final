@@ -34,7 +34,7 @@ export const LoginPage: React.FC = () => {
 
     try {
       console.log('Attempting to login with API URL:', API_URL);
-      const response = await fetch(`${API_URL}/auth/login`, {
+      const response = await fetch(`${API_URL.replace(/\/api$/, '')}/api/auth/login`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
