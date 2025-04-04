@@ -6,7 +6,7 @@ services:
     startCommand: npm run preview
     envVars:
       - key: VITE_API_URL
-        value: https://final-1-c87g.onrender.com/api
+        value: https://final-backend.onrender.com/api
 
   - type: web
     name: final-backend
