@@ -19,7 +19,7 @@ const app = express();
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
     ? 'https://final-2-1yn4.onrender.com'
-    : 'http://localhost:5173',
+    : ['http://localhost:5173', 'http://localhost:5174'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
@@ -159,10 +159,15 @@ app.post('/auth/login', async (req, res) => {
   }
 });
 
+// Root route handler
+app.get('/', (req, res) => {
+  res.json({ status: 'API is running', message: 'Welcome to the API' });
+});
+
 // Protected route example
 app.get('/api/protected', auth, (req, res) => {
   res.json({ message: 'Access granted to protected route', user: req.user });
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5003;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

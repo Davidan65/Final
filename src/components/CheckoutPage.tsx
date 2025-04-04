@@ -11,6 +11,45 @@ type Pet = {
   image: string;
 };
 
+type Service = {
+  id: string;
+  name: string;
+  price: number;
+  deposit: number;
+  description: string;
+};
+
+const SERVICES: { [key: string]: Service } = {
+  'grooming-basic': {
+    id: 'grooming-basic',
+    name: 'Basic Bath',
+    price: 40,
+    deposit: 15,
+    description: 'Basic grooming service including bath, blow dry, brush out, ear cleaning, and nail trim'
+  },
+  'grooming-full': {
+    id: 'grooming-full',
+    name: 'Full Grooming',
+    price: 65,
+    deposit: 25,
+    description: 'Complete grooming service including haircut, style trimming, and all basic services'
+  },
+  'training-puppy': {
+    id: 'training-puppy',
+    name: 'Puppy Training',
+    price: 199,
+    deposit: 50,
+    description: '6 weekly sessions covering socialization, basic commands, and essential training'
+  },
+  'vet-consultation': {
+    id: 'vet-consultation',
+    name: 'Veterinary Consultation',
+    price: 75,
+    deposit: 30,
+    description: 'Initial veterinary consultation and health assessment'
+  }
+};
+
 interface CheckoutPageProps {
   pets: Pet[];
 }
@@ -18,7 +57,8 @@ interface CheckoutPageProps {
 export const CheckoutPage: React.FC<CheckoutPageProps> = ({ pets }) => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const pet = pets.find((p) => p.id === Number(id));
+  const pet = id && !id.includes('-') ? pets.find((p) => p.id === Number(id)) : null;
+  const service = id && id.includes('-') ? SERVICES[id] : null;
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -30,8 +70,8 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ pets }) => {
     cvv: ''
   });
 
-  if (!pet) {
-    return <div className="text-center p-8">Pet not found</div>;
+  if (!pet && !service) {
+    return <div className="text-center p-8">Item not found</div>;
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -81,26 +121,40 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ pets }) => {
     }
 
     // Here you would typically handle the checkout process
-    console.log('Checkout data:', { pet, formData });
+    console.log('Checkout data:', { pet, service, formData });
     
-    // Show success message and redirect
-    alert('Thank you for adopting ' + pet.name + '! We will contact you soon.');
+    // Show appropriate success message and redirect
+    if (pet) {
+      alert(`Thank you for adopting ${pet.name}! We will contact you soon.`);
+    } else if (service) {
+      alert(`Thank you for booking ${service.name}! We will contact you to confirm your appointment.`);
+    }
     navigate('/');
   };
 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-4 sm:p-6 md:p-8">
-        <h2 className="text-2xl font-bold mb-4">Checkout for {pet.name}</h2>
+        <h2 className="text-2xl font-bold mb-4">Checkout for {pet ? pet.name : service?.name}</h2>
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 space-y-4 sm:space-y-0 w-full">
-          <div className="relative w-full sm:w-32 h-32 overflow-hidden">
-            <img src={pet.image} alt={pet.name} className="absolute inset-0 w-full h-full object-cover object-center rounded-lg" />
-          </div>
+          {pet ? (
+            <div className="relative w-full sm:w-32 h-32 overflow-hidden">
+              <img src={pet.image} alt={pet.name} className="absolute inset-0 w-full h-full object-cover object-center rounded-lg" />
+            </div>
+          ) : null}
           <div className="flex-1 sm:ml-8">
-            <h3 className="text-xl font-semibold mb-2">{pet.name}</h3>
-            <p className="font-semibold">{pet.breed}</p>
-            <p className="text-gray-600">{pet.age}</p>
-            <p className="text-lg font-bold mt-2">${pet.price}</p>
+            <h3 className="text-xl font-semibold mb-2">{pet ? pet.name : service?.name}</h3>
+            <p className="text-gray-600 mb-2">{service?.description}</p>
+            <p className="font-semibold text-lg">
+              {pet ? `Adoption Fee: $${pet.price}` : service ? `Total: $${service.price} (Deposit: $${service.deposit})` : ''}
+            </p>
+            {pet ? (
+              <>
+                <p className="font-semibold">{pet.breed}</p>
+                <p className="text-gray-600">{pet.age}</p>
+                <p className="text-lg font-bold mt-2">${pet.price}</p>
+              </>
+            ) : null}
           </div>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
@@ -214,7 +268,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ pets }) => {
               type="submit"
               className="w-full sm:w-auto bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors"
             >
-              Complete Adoption (${pet.price})
+              {pet ? `Complete Adoption ($${pet.price})` : `Book Service ($${service?.price})`}
             </button>
           </div>
         </form>

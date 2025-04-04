@@ -21,6 +21,8 @@ app.use(cors({
     const allowedOrigins = [
       'https://final-frontend.onrender.com',
       'http://localhost:5173',
+      'http://localhost:5002',
+      'http://127.0.0.1:65009',
       'https://final-2-1yn4.onrender.com',
       'https://final-frontend-2.onrender.com',
       'https://final-frontend-2.onrender.com',

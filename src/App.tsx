@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Dog, Cat, Bird, Fish, ShoppingCart, Home, Menu, X, Filter, LogOut } from 'lucide-react';
+import { Search, Dog, Cat, Bird, Fish, ShoppingCart, Home, Menu, X, Filter, LogOut, ChevronDown } from 'lucide-react';
 import { CartProvider } from './contexts/CartContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { HashRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
@@ -10,6 +10,10 @@ import { CheckoutPage } from './components/CheckoutPage';
 import { AboutPage } from './components/AboutPage';
 import { PetFoodPage } from './components/PetFoodPage';
 import { CartCheckoutPage } from './components/CartCheckoutPage';
+import { PetTrainingPage } from './components/PetTrainingPage';
+import { PetAdoptionPage } from './components/PetAdoptionPage';
+import { GroomingServicesPage } from './components/GroomingServicesPage';
+import { VeterinaryReferralsPage } from './components/VeterinaryReferralsPage';
 
 type Pet = {
   id: number;
@@ -399,6 +403,7 @@ function App() {
   const [currentPage, setCurrentPage] = useState(1);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
   // Reset page when filters change
   React.useEffect(() => {
     setCurrentPage(1);
@@ -476,13 +481,25 @@ function App() {
 
             {/* Desktop menu */}
             <div className="hidden md:flex items-center space-x-4">
-              <Link to="/" className="text-white hover:text-blue-100 flex items-center gap-1">
+              <Link to="/" className="text-white hover:text-blue-100 flex items-center">
                 <Home className="h-5 w-5" />
                 <span>Home</span>
               </Link>
               <Link to="/pet-food" className="text-white hover:text-blue-100 flex items-center">
                 <span>Pet Food</span>
               </Link>
+              <div className="relative group">
+                <button className="text-white hover:text-blue-100 flex items-center gap-1 py-2">
+                  <span>Services</span>
+                  <ChevronDown className="h-4 w-4" />
+                </button>
+                <div className="absolute left-0 mt-1 w-48 bg-white rounded-md shadow-lg py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                  <Link to="/pet-training" className="block px-4 py-2 text-gray-800 hover:bg-blue-50">Pet Training</Link>
+                  <Link to="/veterinary-referrals" className="block px-4 py-2 text-gray-800 hover:bg-blue-50">Veterinary Referrals</Link>
+                  <Link to="/grooming-services" className="block px-4 py-2 text-gray-800 hover:bg-blue-50">Grooming Services</Link>
+                  <Link to="/pet-adoption" className="block px-4 py-2 text-gray-800 hover:bg-blue-50">Pet Adoption</Link>
+                </div>
+              </div>
               <Link to="/about" className="text-white hover:text-blue-100 flex items-center">
                 <span>About</span>
               </Link>
@@ -519,6 +536,23 @@ function App() {
               >
                 Pet Food
               </Link>
+              <div className="text-white px-3 py-2">
+                <button
+                  onClick={() => setMobileServicesOpen(!mobileServicesOpen)}
+                  className="flex items-center justify-between w-full text-left font-medium"
+                >
+                  <span>Services</span>
+                  <span className={`transition-transform duration-200 ${mobileServicesOpen ? 'rotate-180' : ''}`}>
+                    ▼
+                  </span>
+                </button>
+                <div className={`pl-4 space-y-2 mt-2 ${mobileServicesOpen ? 'block' : 'hidden'}`}>
+                  <Link to="/pet-training" className="text-white hover:text-blue-100 block py-1" onClick={() => setMobileMenuOpen(false)}>Pet Training</Link>
+                  <Link to="/veterinary-referrals" className="text-white hover:text-blue-100 block py-1" onClick={() => setMobileMenuOpen(false)}>Veterinary Referrals</Link>
+                  <Link to="/grooming-services" className="text-white hover:text-blue-100 block py-1" onClick={() => setMobileMenuOpen(false)}>Grooming Services</Link>
+                  <Link to="/pet-adoption" className="text-white hover:text-blue-100 block py-1" onClick={() => setMobileMenuOpen(false)}>Pet Adoption</Link>
+                </div>
+              </div>
               <Link 
                 to="/about" 
                 className="text-white hover:text-blue-100 block px-3 py-2 rounded-md text-base font-medium"
@@ -603,6 +637,10 @@ function App() {
           <Route path="/pet-food" element={<PetFoodPage />} />
           <Route path="/cart-checkout" element={<CartCheckoutPage />} />
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/pet-training" element={<PetTrainingPage />} />
+          <Route path="/pet-adoption" element={<PetAdoptionPage />} />
+          <Route path="/grooming-services" element={<GroomingServicesPage />} />
+          <Route path="/veterinary-referrals" element={<VeterinaryReferralsPage />} />
           <Route path="/" element={
             <div>
               {/* Search */}
