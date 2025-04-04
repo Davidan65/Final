@@ -40,7 +40,6 @@ export const LoginPage: React.FC = () => {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
-        credentials: 'include',
         body: JSON.stringify(formData)
       });
 
