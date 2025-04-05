@@ -3,6 +3,10 @@ import { Search, Dog, Cat, Bird, Fish, ShoppingCart, Home, Menu, X, Filter, LogO
 import { CartProvider } from './contexts/CartContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { HashRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
+
+const scrollToTop = () => {
+  window.scrollTo(0, 0);
+};
 import { LoginPage, SignupPage } from './components/AuthPages';
 import { Footer } from './components/Footer';
 
@@ -456,7 +460,7 @@ function App() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
-              <Link to="/" className="flex items-center">
+              <Link to="/" className="flex items-center" onClick={scrollToTop}>
                 <span className="text-xl font-bold text-white">Pet Store</span>
               </Link>
             </div>
@@ -481,11 +485,11 @@ function App() {
 
             {/* Desktop menu */}
             <div className="hidden md:flex items-center space-x-4">
-              <Link to="/" className="text-white hover:text-blue-100 flex items-center">
+              <Link to="/" className="text-white hover:text-blue-100 flex items-center" onClick={scrollToTop}>
                 <Home className="h-5 w-5" />
                 <span>Home</span>
               </Link>
-              <Link to="/pet-food" className="text-white hover:text-blue-100 flex items-center">
+              <Link to="/pet-food" className="text-white hover:text-blue-100 flex items-center" onClick={scrollToTop}>
                 <span>Pet Food</span>
               </Link>
               <div className="relative group">
@@ -494,16 +498,16 @@ function App() {
                   <ChevronDown className="h-4 w-4" />
                 </button>
                 <div className="absolute left-0 mt-1 w-48 bg-white rounded-md shadow-lg py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                  <Link to="/pet-training" className="block px-4 py-2 text-gray-800 hover:bg-blue-50">Pet Training</Link>
-                  <Link to="/veterinary-referrals" className="block px-4 py-2 text-gray-800 hover:bg-blue-50">Veterinary Referrals</Link>
-                  <Link to="/grooming-services" className="block px-4 py-2 text-gray-800 hover:bg-blue-50">Grooming Services</Link>
-                  <Link to="/pet-adoption" className="block px-4 py-2 text-gray-800 hover:bg-blue-50">Pet Adoption</Link>
+                  <Link to="/pet-training" className="block px-4 py-2 text-gray-800 hover:bg-blue-50" onClick={scrollToTop}>Pet Training</Link>
+                  <Link to="/veterinary-referrals" className="block px-4 py-2 text-gray-800 hover:bg-blue-50" onClick={scrollToTop}>Veterinary Referrals</Link>
+                  <Link to="/grooming-services" className="block px-4 py-2 text-gray-800 hover:bg-blue-50" onClick={scrollToTop}>Grooming Services</Link>
+                  <Link to="/pet-adoption" className="block px-4 py-2 text-gray-800 hover:bg-blue-50" onClick={scrollToTop}>Pet Adoption</Link>
                 </div>
               </div>
-              <Link to="/about" className="text-white hover:text-blue-100 flex items-center">
+              <Link to="/about" className="text-white hover:text-blue-100 flex items-center" onClick={scrollToTop}>
                 <span>About</span>
               </Link>
-              <Link to="/cart-checkout" className="text-white hover:text-blue-100">
+              <Link to="/cart-checkout" className="text-white hover:text-blue-100" onClick={scrollToTop}>
                 <ShoppingCart className="h-6 w-6" />
               </Link>
               <button 

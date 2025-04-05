@@ -71,13 +71,13 @@ export const CartCheckoutPage: React.FC = () => {
           <div className="flex flex-col sm:flex-row justify-end items-stretch gap-4 w-full sm:w-auto min-w-[200px]">
             <button
               onClick={() => navigate('/pet-food')}
-              className="flex-1 sm:flex-none px-8 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors text-sm sm:text-base order-2 sm:order-1"
+              className="flex-1 sm:flex-none px-8 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 hover:shadow-md transform hover:scale-105 transition-all duration-200 text-sm sm:text-base order-2 sm:order-1"
             >
               Continue Shopping
             </button>
             <button
               onClick={handleCheckout}
-              className="flex-1 sm:flex-none px-8 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm sm:text-base order-1 sm:order-2"
+              className="flex-1 sm:flex-none px-8 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 hover:shadow-md transform hover:scale-105 transition-all duration-200 text-sm sm:text-base order-1 sm:order-2"
             >
               Checkout
             </button>

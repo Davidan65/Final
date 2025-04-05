@@ -2,6 +2,10 @@ import React from 'react';
 import { Heart, Shield, Clock, MapPin, Phone, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+const scrollToTop = () => {
+  window.scrollTo(0, 0);
+};
+
 export const GroomingServicesPage: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-8">
@@ -42,6 +46,7 @@ export const GroomingServicesPage: React.FC = () => {
                 <p className="text-sm text-gray-600">Required Deposit: $15</p>
                 <Link
                   to="/checkout/grooming-basic"
+                  onClick={scrollToTop}
                   className="block w-full bg-blue-500 text-white text-center px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors mt-3"
                 >
                   Book Now
@@ -62,6 +67,7 @@ export const GroomingServicesPage: React.FC = () => {
                 <p className="text-sm text-gray-600">Required Deposit: $25</p>
                 <Link
                   to="/checkout/grooming-full"
+                  onClick={scrollToTop}
                   className="block w-full bg-blue-500 text-white text-center px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors mt-3"
                 >
                   Book Now

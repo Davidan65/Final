@@ -3,6 +3,10 @@ import { Link } from 'react-router-dom';
 import { Facebook, Instagram, Mail, Phone, MapPin, Clock, Heart, Shield } from 'lucide-react';
 
 export const Footer: React.FC = () => {
+  const scrollToTop = () => {
+    window.scrollTo(0, 0);
+  };
+
   return (
     <footer className="bg-blue-500 text-white py-8 mt-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -33,16 +37,16 @@ export const Footer: React.FC = () => {
             <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/" className="hover:text-blue-200 transition-colors">Home</Link>
+                <Link to="/" onClick={scrollToTop} className="hover:text-blue-200 transition-colors">Home</Link>
               </li>
               <li>
-                <Link to="/pet-food" className="hover:text-blue-200 transition-colors">Pet Food</Link>
+                <Link to="/pet-food" onClick={scrollToTop} className="hover:text-blue-200 transition-colors">Pet Food</Link>
               </li>
               <li>
-                <Link to="/about" className="hover:text-blue-200 transition-colors">About Us</Link>
+                <Link to="/about" onClick={scrollToTop} className="hover:text-blue-200 transition-colors">About Us</Link>
               </li>
               <li>
-                <Link to="/cart-checkout" className="hover:text-blue-200 transition-colors">Shopping Cart</Link>
+                <Link to="/cart-checkout" onClick={scrollToTop} className="hover:text-blue-200 transition-colors">Shopping Cart</Link>
               </li>
             </ul>
           </div>
@@ -64,16 +68,16 @@ export const Footer: React.FC = () => {
               <h4 className="font-semibold mb-2">Services</h4>
               <ul className="space-y-1">
                 <li>
-                  <Link to="/pet-adoption" className="hover:text-blue-200 transition-colors">Pet Adoption</Link>
+                  <Link to="/pet-adoption" onClick={scrollToTop} className="hover:text-blue-200 transition-colors">Pet Adoption</Link>
                 </li>
                 <li>
-                  <Link to="/veterinary-referrals" className="hover:text-blue-200 transition-colors">Veterinary Referrals</Link>
+                  <Link to="/veterinary-referrals" onClick={scrollToTop} className="hover:text-blue-200 transition-colors">Veterinary Referrals</Link>
                 </li>
                 <li>
-                  <Link to="/grooming-services" className="hover:text-blue-200 transition-colors">Grooming Services</Link>
+                  <Link to="/grooming-services" onClick={scrollToTop} className="hover:text-blue-200 transition-colors">Grooming Services</Link>
                 </li>
                 <li>
-                  <Link to="/pet-training" className="hover:text-blue-200 transition-colors">Pet Training</Link>
+                  <Link to="/pet-training" onClick={scrollToTop} className="hover:text-blue-200 transition-colors">Pet Training</Link>
                 </li>
               </ul>
             </div>
@@ -101,29 +105,14 @@ export const Footer: React.FC = () => {
               >
                 <Instagram className="h-6 w-6" />
               </a>
-              <a 
-                href="mailto:info@petstore.com" 
-                className="hover:text-blue-200 transition-colors"
-                aria-label="Email"
-              >
-                <Mail className="h-6 w-6" />
-              </a>
             </div>
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <Heart className="h-5 w-5" />
-                <p className="text-sm">Committed to finding loving homes for pets</p>
-              </div>
-              <div className="flex items-center gap-2">
-                <Shield className="h-5 w-5" />
-                <p className="text-sm">Licensed and certified pet care provider</p>
-              </div>
+            <div className="space-y-2">
+              <h4 className="font-semibold">Our Mission</h4>
+              <p className="text-sm">
+                Providing the best care and products for your beloved pets.
+              </p>
             </div>
           </div>
-        </div>
-
-        <div className="border-t border-blue-400 mt-8 pt-6 text-center">
-          <p>&copy; {new Date().getFullYear()} Pet Store. All rights reserved.</p>
         </div>
       </div>
     </footer>

@@ -2,6 +2,10 @@ import React from 'react';
 import { Heart, Shield, Clock, MapPin, Phone, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+const scrollToTop = () => {
+  window.scrollTo(0, 0);
+};
+
 export const PetTrainingPage: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-8">
@@ -43,6 +47,7 @@ export const PetTrainingPage: React.FC = () => {
                 <p className="text-sm text-gray-600">Required Deposit: $50</p>
                 <Link
                   to="/checkout/training-puppy"
+                  onClick={scrollToTop}
                   className="block w-full bg-blue-500 text-white text-center px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors mt-3"
                 >
                   Book Now
@@ -61,6 +66,13 @@ export const PetTrainingPage: React.FC = () => {
               <div className="mt-4 space-y-2">
                 <p className="font-semibold">$299</p>
                 <p className="text-sm text-gray-600">Required Deposit: $75</p>
+                <Link
+                  to="/checkout/training-adult"
+                  onClick={scrollToTop}
+                  className="block w-full bg-blue-500 text-white text-center px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors mt-3"
+                >
+                  Book Now
+                </Link>
               </div>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-md">
@@ -75,6 +87,13 @@ export const PetTrainingPage: React.FC = () => {
               <div className="mt-4 space-y-2">
                 <p className="font-semibold">From $399</p>
                 <p className="text-sm text-gray-600">Required Deposit: $100</p>
+                <Link
+                  to="/checkout/training-specialized"
+                  onClick={scrollToTop}
+                  className="block w-full bg-blue-500 text-white text-center px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors mt-3"
+                >
+                  Book Now
+                </Link>
               </div>
             </div>
           </div>

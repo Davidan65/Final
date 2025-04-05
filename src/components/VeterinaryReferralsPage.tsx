@@ -2,6 +2,10 @@ import React from 'react';
 import { Heart, Shield, Clock, MapPin, Phone, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+const scrollToTop = () => {
+  window.scrollTo(0, 0);
+};
+
 export const VeterinaryReferralsPage: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-8">
@@ -50,6 +54,7 @@ export const VeterinaryReferralsPage: React.FC = () => {
                 <p className="text-sm text-gray-600">Required Deposit: $30</p>
                 <Link
                   to="/checkout/vet-consultation"
+                  onClick={scrollToTop}
                   className="block w-full bg-blue-500 text-white text-center px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors mt-3"
                 >
                   Book Consultation
@@ -185,6 +190,88 @@ export const VeterinaryReferralsPage: React.FC = () => {
                 "I was worried about finding the right specialist for my cat's condition, but their referral service made it easy and stress-free."
               </p>
               <p className="font-semibold">- Mark T.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Emergency Contact */}
+        <div className="mb-12 bg-red-50 p-6 rounded-lg shadow-md">
+          <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2 text-red-700">
+            <Phone className="h-6 w-6" />
+            24/7 Emergency Contact
+          </h2>
+          <div className="grid md:grid-cols-2 gap-6">
+            <div>
+              <h3 className="font-semibold mb-2">Emergency Hotline</h3>
+              <p className="text-xl font-bold text-red-700 mb-2">(800) 555-0123</p>
+              <p className="text-sm text-gray-700">Available 24 hours for urgent care needs</p>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-2">Emergency Services</h3>
+              <ul className="text-sm text-gray-700 space-y-1">
+                <li>• Immediate medical attention</li>
+                <li>• Critical care facilities</li>
+                <li>• Emergency surgery</li>
+                <li>• Poison control</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        {/* Clinic Finder */}
+        <div className="mb-12">
+          <h2 className="text-2xl font-semibold mb-6">Find a Clinic Near You</h2>
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <h3 className="font-semibold mb-3">Downtown Pet Hospital</h3>
+              <div className="space-y-2 text-gray-700">
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-4 w-4" />
+                  <p>123 Main St, Downtown</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Phone className="h-4 w-4" />
+                  <p>(555) 123-4567</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4" />
+                  <p>Open 24/7</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <h3 className="font-semibold mb-3">Westside Veterinary Clinic</h3>
+              <div className="space-y-2 text-gray-700">
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-4 w-4" />
+                  <p>456 West Ave, Westside</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Phone className="h-4 w-4" />
+                  <p>(555) 234-5678</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4" />
+                  <p>8am - 8pm Daily</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <h3 className="font-semibold mb-3">Eastside Animal Hospital</h3>
+              <div className="space-y-2 text-gray-700">
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-4 w-4" />
+                  <p>789 East Blvd, Eastside</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Phone className="h-4 w-4" />
+                  <p>(555) 345-6789</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4" />
+                  <p>7am - 10pm Daily</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
