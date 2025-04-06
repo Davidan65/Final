@@ -1,6 +1,7 @@
 import React, { useState, Suspense } from 'react';
 import { Dog, Cat, Bird, Fish, ShoppingCart, Home, Menu, X, LogOut, ChevronDown } from 'lucide-react';
 import { HashRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
+import { ScrollToTop } from './components/ScrollToTop';
 
 // Contexts
 import { CartProvider } from './contexts/CartContext';
@@ -450,6 +451,7 @@ function App() {
   if (!isAuthenticated) {
     return (
       <Router>
+      <ScrollToTop />
         <div className="min-h-screen bg-gray-100">
           <Routes>
             <Route path="/login" element={<LoginPage />} />
@@ -465,6 +467,7 @@ function App() {
   return (
     <ErrorBoundary>
       <Router>
+      <ScrollToTop />
         <CartProvider>
           <Suspense fallback={<div>Loading...</div>}>
             <div className="min-h-screen bg-gray-100">
