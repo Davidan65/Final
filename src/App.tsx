@@ -7,10 +7,6 @@ import { ScrollToTop } from './components/ScrollToTop';
 import { CartProvider } from './contexts/CartContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 
-// Additional Auth Pages
-import ForgotPassword from './components/ForgotPassword';
-import ResetPassword from './components/ResetPassword';
-
 // Components
 import ErrorBoundary from './components/ErrorBoundary';
 import { HomePage } from './components/HomePage';
@@ -415,22 +411,13 @@ const pets: Pet[] = [
 
 function App() {
   const { isAuthenticated, token, logout } = useAuth();
+  console.log("Authentication state:", isAuthenticated, "Token:", token);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
-
-  // Close mobile menus when route changes
-  const closeMobileMenus = () => {
-    setMobileMenuOpen(false);
-    setMobileServicesOpen(false);
-  };
-
-  // Remove debug logging
-  React.useEffect(() => {
-    closeMobileMenus();
-  }, [window.location.pathname]);
   // Reset page when filters change
   React.useEffect(() => {
     setCurrentPage(1);
@@ -464,14 +451,12 @@ function App() {
   if (!isAuthenticated) {
     return (
       <Router>
-        <ScrollToTop />
+      <ScrollToTop />
         <div className="min-h-screen bg-gray-100">
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password/:token" element={<ResetPassword />} />
-            <Route path="*" element={<Navigate to="/login" replace />} />
+            <Route path="*" element={<Navigate to="/signup" replace />} />
           </Routes>
         </div>
       </Router>
@@ -482,7 +467,7 @@ function App() {
   return (
     <ErrorBoundary>
       <Router>
-        <ScrollToTop />
+      <ScrollToTop />
         <CartProvider>
           <Suspense fallback={<div>Loading...</div>}>
             <div className="min-h-screen bg-gray-100">
@@ -639,8 +624,6 @@ function App() {
           <Route path="/checkout/:id" element={<CheckoutPage pets={pets} />} />
           <Route path="/adopt" element={<PetList pets={pets} />} />
           <Route path="/adopt/:id" element={<AdoptPage pets={pets} />} />
-          <Route path="/login" element={<Navigate to="/" replace />} />
-          <Route path="/signup" element={<Navigate to="/" replace />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>

@@ -6,7 +6,6 @@ import cors from 'cors';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import dotenv from 'dotenv';
-import nodemailer from 'nodemailer';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -81,9 +80,7 @@ mongoose.connect(process.env.MONGODB_URI, {
 // User Schema
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  resetPasswordToken: String,
-  resetPasswordExpires: Date
+  password: { type: String, required: true }
 });
 
 const User = mongoose.model('User', userSchema);
@@ -157,79 +154,6 @@ app.post('/api/auth/login', async (req, res) => {
 app.get('/api', (req, res) => {
   console.log('Test route hit');
   res.json({ message: 'API is working!' });
-});
-
-app.post('/api/auth/forgot-password', async (req, res) => {
-  try {
-    const { email } = req.body;
-    const user = await User.findOne({ email });
-    
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-    
-    const resetToken = jwt.sign(
-      { userId: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
-    
-    user.resetPasswordToken = resetToken;
-    user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
-    await user.save();
-    
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-      }
-    });
-    
-    const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
-    
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: user.email,
-      subject: 'Password Reset Request',
-      text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n
-             Please click on the following link, or paste this into your browser to complete the process:\n\n
-             ${resetUrl}\n\n
-             If you did not request this, please ignore this email and your password will remain unchanged.`
-    };
-    
-    await transporter.sendMail(mailOptions);
-    res.json({ message: 'Password reset email sent' });
-  } catch (error) {
-    console.error('Forgot password error:', error);
-    res.status(500).json({ error: 'Error processing password reset request' });
-  }
-});
-
-app.post('/api/auth/reset-password', async (req, res) => {
-  try {
-    const { token, newPassword } = req.body;
-    
-    const user = await User.findOne({
-      resetPasswordToken: token,
-      resetPasswordExpires: { $gt: Date.now() }
-    });
-    
-    if (!user) {
-      return res.status(400).json({ error: 'Password reset token is invalid or has expired' });
-    }
-    
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-    user.password = hashedPassword;
-    user.resetPasswordToken = undefined;
-    user.resetPasswordExpires = undefined;
-    await user.save();
-    
-    res.json({ message: 'Password has been reset' });
-  } catch (error) {
-    console.error('Reset password error:', error);
-    res.status(500).json({ error: 'Error resetting password' });
-  }
 });
 
 app.get('/', (req, res) => {

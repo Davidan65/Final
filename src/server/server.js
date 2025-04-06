@@ -6,8 +6,6 @@ import cors from 'cors';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import dotenv from 'dotenv';
-import nodemailer from 'nodemailer';
-import crypto from 'crypto';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -73,9 +71,7 @@ process.on('SIGINT', async () => {
 // User Schema
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  resetPasswordToken: String,
-  resetPasswordExpires: Date
+  password: { type: String, required: true }
 });
 
 const User = mongoose.model('User', userSchema);
@@ -171,89 +167,6 @@ app.get('/', (req, res) => {
 // Protected route example
 app.get('/api/protected', auth, (req, res) => {
   res.json({ message: 'Access granted to protected route', user: req.user });
-});
-
-// Configure nodemailer
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
-});
-
-// Password reset request route
-app.post('/auth/forgot-password', async (req, res) => {
-  try {
-    const { email } = req.body;
-    const user = await User.findOne({ email });
-    
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-    
-    // Generate reset token
-    const buffer = crypto.randomBytes(32);
-    const token = buffer.toString('hex');
-    
-    user.resetPasswordToken = token;
-    user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
-    await user.save();
-    
-    // Send reset email
-    const resetUrl = `${req.protocol}://${req.get('host')}/reset-password/${token}`;
-    const mailOptions = {
-      to: user.email,
-      from: process.env.EMAIL_USER,
-      subject: 'Password Reset Request',
-      text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n
-        Please click on the following link, or paste this into your browser to complete the process:\n\n
-        ${resetUrl}\n\n
-        If you did not request this, please ignore this email and your password will remain unchanged.\n`
-    };
-    
-    await transporter.sendMail(mailOptions);
-    res.json({ message: 'Password reset email sent' });
-  } catch (error) {
-    res.status(500).json({ error: 'Error in password reset request' });
-  }
-});
-
-// Reset password route
-app.post('/auth/reset-password/:token', async (req, res) => {
-  try {
-    const { password } = req.body;
-    const { token } = req.params;
-    
-    const user = await User.findOne({
-      resetPasswordToken: token,
-      resetPasswordExpires: { $gt: Date.now() }
-    });
-    
-    if (!user) {
-      return res.status(400).json({ error: 'Password reset token is invalid or has expired' });
-    }
-    
-    // Set new password
-    const hashedPassword = await bcrypt.hash(password, 10);
-    user.password = hashedPassword;
-    user.resetPasswordToken = undefined;
-    user.resetPasswordExpires = undefined;
-    await user.save();
-    
-    // Send confirmation email
-    const mailOptions = {
-      to: user.email,
-      from: process.env.EMAIL_USER,
-      subject: 'Your password has been changed',
-      text: 'This is a confirmation that the password for your account has been changed.\n'
-    };
-    
-    await transporter.sendMail(mailOptions);
-    res.json({ message: 'Password reset successful' });
-  } catch (error) {
-    res.status(500).json({ error: 'Error resetting password' });
-  }
 });
 
 const PORT = process.env.PORT || 5003;
