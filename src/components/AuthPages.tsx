@@ -159,7 +159,7 @@ export const SignupPage: React.FC = () => {
 
     try {
       console.log('Attempting to signup with API URL:', API_URL);
-      const response = await fetch(`${API_URL}/auth/signup`, {
+      const response = await fetch(`${API_URL.replace(/\/api$/, '')}/api/auth/signup`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
