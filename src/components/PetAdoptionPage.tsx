@@ -1,5 +1,6 @@
 import React from 'react';
 import { Heart, Shield, Clock, MapPin, Phone } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export const PetAdoptionPage: React.FC = () => {
   return (
@@ -136,6 +137,13 @@ export const PetAdoptionPage: React.FC = () => {
             <p className="text-gray-700 mb-4">
               Visit us today to meet your potential new family member or contact us for more information.
             </p>
+            <Link
+              to="/adopt"
+              className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200 mb-6"
+              onClick={() => window.scrollTo(0, 0)}
+            >
+              Browse Available Pets
+            </Link>
             <div className="flex items-center justify-center gap-2">
               <MapPin className="h-5 w-5 text-blue-500" />
               <p className="text-gray-700">123 Pet Street, Anytown, ST 12345</p>

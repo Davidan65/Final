@@ -55,7 +55,7 @@ export const VeterinaryReferralsPage: React.FC = () => {
                 <Link
                   to="/checkout/vet-consultation"
                   onClick={scrollToTop}
-                  className="block w-full bg-blue-500 text-white text-center px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors mt-3"
+                  className="block w-full bg-blue-700 text-white text-center px-4 py-2 rounded-lg hover:bg-blue-800 transition-colors mt-3"
                 >
                   Book Consultation
                 </Link>
