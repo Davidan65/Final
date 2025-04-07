@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Star, ShoppingBag } from 'lucide-react';
+import { useCart } from '../contexts/CartContext';
 
 const scrollToTop = () => {
   window.scrollTo(0, 0);
@@ -259,10 +260,52 @@ const accessories: Accessory[] = [
 ];
 
 export const PetAccessoriesPage: React.FC = () => {
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [searchTerm, setSearchTerm] = useState('');
+  const { addItem } = useCart();
+
+  const filteredAccessories = accessories.filter(accessory => {
+    const matchesCategory = selectedCategory === 'All' || accessory.category === selectedCategory;
+    const matchesSearch = accessory.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         accessory.description.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
+
+  const handleAddToCart = (accessory: Accessory) => {
+    addItem(accessory.id, accessory.name, accessory.price);
+  };
+
+  // Get unique categories
+  const categories = ['All', ...new Set(accessories.map(a => a.category))];
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-4xl font-bold text-center mb-8">Pet Accessories</h1>
+
+        {/* Search and Filter Section */}
+        <div className="mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
+          <div className="w-full md:w-1/3">
+            <input
+              type="text"
+              placeholder="Search accessories..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div className="w-full md:w-1/3">
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {categories.map(category => (
+                <option key={category} value={category}>{category}</option>
+              ))}
+            </select>
+          </div>
+        </div>
         
         {/* Hero Section */}
         <div className="mb-12">
@@ -283,7 +326,7 @@ export const PetAccessoriesPage: React.FC = () => {
 
         {/* Accessories Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {accessories.map((accessory) => (
+          {filteredAccessories.map((accessory) => (
             <div key={accessory.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
               <img
                 src={accessory.image}
@@ -298,14 +341,13 @@ export const PetAccessoriesPage: React.FC = () => {
                 <p className="text-gray-600 text-sm mb-4">{accessory.description}</p>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-500">{accessory.category}</span>
-                  <Link
-                    to="/cart-checkout"
-                    onClick={scrollToTop}
+                  <button
+                    onClick={() => handleAddToCart(accessory)}
                     className="flex items-center gap-2 bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition-colors"
                   >
                     <ShoppingBag className="h-4 w-4" />
                     Add to Cart
-                  </Link>
+                  </button>
                 </div>
               </div>
             </div>
