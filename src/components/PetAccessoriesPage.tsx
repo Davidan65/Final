@@ -1,202 +1,316 @@
-import React, { useState } from 'react';
-import { useCart } from '../contexts/CartContext';
-import { useAuth } from '../contexts/AuthContext';
-import { Filter, Star, Info, ShoppingBag, Shield, Heart } from 'lucide-react';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Star, ShoppingBag } from 'lucide-react';
 
-type PetAccessory = {
+const scrollToTop = () => {
+  window.scrollTo(0, 0);
+};
+
+type Accessory = {
   id: number;
   name: string;
-  category: string;
   description: string;
   price: number;
   image: string;
-  brand?: string;
-  features?: string[];
+  category: string;
 };
 
-const petAccessories: PetAccessory[] = [
+const accessories: Accessory[] = [
   {
     id: 1,
     name: "Luxury Dog Collar",
-    category: "Collars & Leashes",
     description: "Premium leather collar with brass hardware",
     price: 29.99,
     image: "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&q=80&w=500",
-    brand: "PetStyle",
-    features: ["Genuine Leather", "Adjustable Size"]
+    category: "Collars & Leashes"
   },
   {
     id: 2,
-    name: "Cat Grooming Brush",
-    category: "Grooming",
-    description: "Self-cleaning slicker brush for cats",
-    price: 19.99,
-    image: "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&q=80&w=500",
-    brand: "PurrFect",
-    features: ["Self-Cleaning", "Soft Bristles"]
+    name: "Cozy Pet Bed",
+    description: "Soft, washable bed with orthopedic foam",
+    price: 49.99,
+    image: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&q=80&w=500",
+    category: "Beds & Furniture"
   },
   {
     id: 3,
-    name: "Interactive Dog Toy",
-    category: "Toys",
-    description: "Treat-dispensing puzzle toy for mental stimulation",
-    price: 24.99,
-    image: "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&q=80&w=500",
-    brand: "PawPlay",
-    features: ["Durable", "Interactive"]
+    name: "Interactive Cat Toy",
+    description: "Electronic mouse with random movements",
+    price: 19.99,
+    image: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&q=80&w=500",
+    category: "Toys"
   },
   {
     id: 4,
-    name: "Pet Water Fountain",
-    category: "Feeding",
-    description: "Filtered water fountain with quiet operation",
-    price: 44.99,
-    image: "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&q=80&w=500",
-    brand: "AquaPet",
-    features: ["Filtered", "LED Indicator"]
+    name: "Professional Grooming Brush",
+    description: "Double-sided brush for all coat types",
+    price: 24.99,
+    image: "https://images.unsplash.com/photo-1583511655826-05700442b31b?auto=format&fit=crop&q=80&w=500",
+    category: "Grooming"
   },
   {
     id: 5,
-    name: "Cozy Pet Bed",
-    category: "Bedding",
-    description: "Orthopedic memory foam pet bed",
-    price: 59.99,
-    image: "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&q=80&w=500",
-    brand: "ComfortPaws",
-    features: ["Memory Foam", "Washable Cover"]
+    name: "Stylish Dog Sweater",
+    description: "Warm knit sweater for cold weather",
+    price: 34.99,
+    image: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&q=80&w=500",
+    category: "Clothing"
   },
   {
     id: 6,
-    name: "Cat Scratching Post",
-    category: "Furniture",
-    description: "Tall sisal rope scratching post with perch",
+    name: "Automatic Water Fountain",
+    description: "Filtered water fountain with LED indicator",
     price: 39.99,
-    image: "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&q=80&w=500",
-    brand: "ScratchMaster",
-    features: ["Sisal Rope", "Stable Base"]
+    image: "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&q=80&w=500",
+    category: "Feeding & Water"
   },
   {
     id: 7,
-    name: "Dog Training Clicker",
-    category: "Training",
-    description: "Professional dog training clicker with wrist strap",
-    price: 9.99,
-    image: "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&q=80&w=500",
-    brand: "TrainPro",
-    features: ["Loud Click", "Ergonomic Design"]
+    name: "Travel Pet Carrier",
+    description: "Airline-approved carrier with padding",
+    price: 59.99,
+    image: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&q=80&w=500",
+    category: "Travel"
   },
   {
     id: 8,
-    name: "Pet Carrier Backpack",
-    category: "Travel",
-    description: "Ventilated pet carrier backpack for small pets",
-    price: 49.99,
-    image: "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&q=80&w=500",
-    brand: "PetVoyage",
-    features: ["Ventilated", "Comfortable"]
+    name: "Dental Care Kit",
+    description: "Complete kit for oral hygiene",
+    price: 29.99,
+    image: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&q=80&w=500",
+    category: "Health & Wellness"
   },
   {
     id: 9,
-    name: "Automatic Pet Feeder",
-    category: "Feeding",
-    description: "Programmable automatic pet feeder with timer",
-    price: 79.99,
-    image: "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&q=80&w=500",
-    brand: "SmartFeed",
-    features: ["Programmable", "Large Capacity"]
+    name: "Bird Cage Accessories Set",
+    description: "Swings, perches, and toys for birds",
+    price: 44.99,
+    image: "https://images.unsplash.com/photo-1552728089-57bdde30beb3?auto=format&fit=crop&q=80&w=500",
+    category: "Bird Supplies"
   },
   {
     id: 10,
-    name: "Pet Grooming Kit",
-    category: "Grooming",
-    description: "Complete grooming kit with scissors and combs",
-    price: 34.99,
-    image: "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&q=80&w=500",
-    brand: "GroomPro",
-    features: ["Professional Grade", "Complete Set"]
+    name: "Fish Tank Decor Kit",
+    description: "Artificial plants and ornaments",
+    price: 32.99,
+    image: "https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?auto=format&fit=crop&q=80&w=500",
+    category: "Aquarium"
   },
-  // Add more accessories here...
+  {
+    id: 11,
+    name: "Retractable Dog Leash",
+    description: "16ft leash with anti-slip handle",
+    price: 27.99,
+    image: "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&q=80&w=500",
+    category: "Collars & Leashes"
+  },
+  {
+    id: 12,
+    name: "Cat Climbing Tree",
+    description: "Multi-level tree with scratching posts",
+    price: 89.99,
+    image: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&q=80&w=500",
+    category: "Beds & Furniture"
+  },
+  {
+    id: 13,
+    name: "Puzzle Treat Dispenser",
+    description: "Mental stimulation toy for dogs",
+    price: 22.99,
+    image: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&q=80&w=500",
+    category: "Toys"
+  },
+  {
+    id: 14,
+    name: "Pet Nail Clippers",
+    description: "Professional-grade nail trimmer",
+    price: 18.99,
+    image: "https://images.unsplash.com/photo-1583511655826-05700442b31b?auto=format&fit=crop&q=80&w=500",
+    category: "Grooming"
+  },
+  {
+    id: 15,
+    name: "Raincoat for Dogs",
+    description: "Waterproof coat with reflective strips",
+    price: 31.99,
+    image: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&q=80&w=500",
+    category: "Clothing"
+  },
+  {
+    id: 16,
+    name: "Automatic Pet Feeder",
+    description: "Programmable feeder with timer",
+    price: 79.99,
+    image: "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&q=80&w=500",
+    category: "Feeding & Water"
+  },
+  {
+    id: 17,
+    name: "Pet First Aid Kit",
+    description: "Complete emergency care kit",
+    price: 45.99,
+    image: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&q=80&w=500",
+    category: "Health & Wellness"
+  },
+  {
+    id: 18,
+    name: "Bird Training Kit",
+    description: "Training tools and treats for birds",
+    price: 34.99,
+    image: "https://images.unsplash.com/photo-1552728089-57bdde30beb3?auto=format&fit=crop&q=80&w=500",
+    category: "Bird Supplies"
+  },
+  {
+    id: 19,
+    name: "Aquarium Cleaning Set",
+    description: "Complete tank maintenance kit",
+    price: 49.99,
+    image: "https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?auto=format&fit=crop&q=80&w=500",
+    category: "Aquarium"
+  },
+  {
+    id: 20,
+    name: "GPS Pet Tracker",
+    description: "Real-time location tracking device",
+    price: 99.99,
+    image: "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&q=80&w=500",
+    category: "Tech Accessories"
+  },
+  {
+    id: 21,
+    name: "Memory Foam Pet Mattress",
+    description: "Therapeutic bed for senior pets",
+    price: 69.99,
+    image: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&q=80&w=500",
+    category: "Beds & Furniture"
+  },
+  {
+    id: 22,
+    name: "Fetch Ball Set",
+    description: "Durable balls with launcher",
+    price: 25.99,
+    image: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&q=80&w=500",
+    category: "Toys"
+  },
+  {
+    id: 23,
+    name: "Pet Shampoo & Conditioner",
+    description: "Natural ingredients for sensitive skin",
+    price: 19.99,
+    image: "https://images.unsplash.com/photo-1583511655826-05700442b31b?auto=format&fit=crop&q=80&w=500",
+    category: "Grooming"
+  },
+  {
+    id: 24,
+    name: "Winter Pet Boots",
+    description: "Set of 4 waterproof boots",
+    price: 39.99,
+    image: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&q=80&w=500",
+    category: "Clothing"
+  },
+  {
+    id: 25,
+    name: "Smart Pet Bowl",
+    description: "Portion control with app integration",
+    price: 54.99,
+    image: "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&q=80&w=500",
+    category: "Feeding & Water"
+  },
+  {
+    id: 26,
+    name: "Pet Backpack Carrier",
+    description: "Ventilated hiking backpack",
+    price: 64.99,
+    image: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&q=80&w=500",
+    category: "Travel"
+  },
+  {
+    id: 27,
+    name: "Pet Vitamins Set",
+    description: "Complete daily supplement pack",
+    price: 37.99,
+    image: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&q=80&w=500",
+    category: "Health & Wellness"
+  },
+  {
+    id: 28,
+    name: "Bird Bath Fountain",
+    description: "Solar-powered bath with filter",
+    price: 42.99,
+    image: "https://images.unsplash.com/photo-1552728089-57bdde30beb3?auto=format&fit=crop&q=80&w=500",
+    category: "Bird Supplies"
+  },
+  {
+    id: 29,
+    name: "LED Aquarium Light",
+    description: "Programmable full-spectrum light",
+    price: 59.99,
+    image: "https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?auto=format&fit=crop&q=80&w=500",
+    category: "Aquarium"
+  },
+  {
+    id: 30,
+    name: "Pet Camera",
+    description: "Wi-Fi camera with treat dispenser",
+    price: 129.99,
+    image: "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&q=80&w=500",
+    category: "Tech Accessories"
+  }
 ];
 
 export const PetAccessoriesPage: React.FC = () => {
-  const { addItem } = useCart();
-  const { isAuthenticated } = useAuth();
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
-
-  const categories = ['all', ...new Set(petAccessories.map(item => item.category))];
-
-  const filteredAccessories = selectedCategory === 'all'
-    ? petAccessories
-    : petAccessories.filter(item => item.category === selectedCategory);
-
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex flex-col md:flex-row justify-between items-start mb-8">
-        <div>
-          <h1 className="text-3xl font-bold mb-2">Pet Accessories</h1>
-          <p className="text-gray-600 mb-4">Find the perfect accessories for your beloved pets</p>
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-4xl font-bold text-center mb-8">Pet Accessories</h1>
+        
+        {/* Hero Section */}
+        <div className="mb-12">
+          <img
+            src="https://images.unsplash.com/photo-1583511655826-05700442b31b?auto=format&fit=crop&q=80&w=1024"
+            alt="Pet Accessories"
+            className="w-full h-[400px] object-cover rounded-lg shadow-lg mb-6"
+          />
+          <div className="bg-blue-50 p-6 rounded-lg shadow-md">
+            <h2 className="text-2xl font-semibold mb-4">Quality Pet Accessories</h2>
+            <p className="text-gray-700 mb-4">
+              Discover our wide selection of premium pet accessories designed to enhance your pet's comfort,
+              health, and happiness. From essential everyday items to luxury pet products, we have everything
+              you need to pamper your furry friend.
+            </p>
+          </div>
         </div>
 
-        <div className="flex items-center space-x-2 mb-4 md:mb-0">
-          <Filter className="w-5 h-5 text-gray-500" />
-          <select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            {categories.map(category => (
-              <option key={category} value={category}>
-                {category.charAt(0).toUpperCase() + category.slice(1)}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {filteredAccessories.map(item => (
-          <div key={item.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-            <div className="relative">
+        {/* Accessories Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {accessories.map((accessory) => (
+            <div key={accessory.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
               <img
-                src={item.image}
-                alt={item.name}
+                src={accessory.image}
+                alt={accessory.name}
                 className="w-full h-48 object-cover"
               />
-              <div className="absolute top-2 right-2 bg-white rounded-full p-1.5 shadow-md">
-                <Heart className="w-5 h-5 text-red-500" />
-              </div>
-            </div>
-
-            <div className="p-4">
-              <div className="flex justify-between items-start mb-2">
-                <h3 className="text-lg font-semibold">{item.name}</h3>
-                <span className="text-lg font-bold text-blue-600">${item.price.toFixed(2)}</span>
-              </div>
-
-              <p className="text-gray-600 text-sm mb-3">{item.description}</p>
-
-              <div className="flex flex-wrap gap-2 mb-4">
-                {item.features?.map(feature => (
-                  <span
-                    key={feature}
-                    className="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full"
+              <div className="p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-lg font-semibold">{accessory.name}</h3>
+                  <span className="text-blue-600 font-bold">${accessory.price}</span>
+                </div>
+                <p className="text-gray-600 text-sm mb-4">{accessory.description}</p>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-500">{accessory.category}</span>
+                  <Link
+                    to="/cart-checkout"
+                    onClick={scrollToTop}
+                    className="flex items-center gap-2 bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition-colors"
                   >
-                    {feature}
-                  </span>
-                ))}
+                    <ShoppingBag className="h-4 w-4" />
+                    Add to Cart
+                  </Link>
+                </div>
               </div>
-
-              <button
-                onClick={() => addItem(item.id, item.name, item.price)}
-                className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center gap-2"
-                disabled={!isAuthenticated}
-              >
-                <ShoppingBag className="w-5 h-5" />
-                Add to Cart
-              </button>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );

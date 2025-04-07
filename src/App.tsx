@@ -1,5 +1,6 @@
 import React, { useState, Suspense } from 'react';
 import { Dog, Cat, Bird, Fish, ShoppingCart, Home, Menu, X, LogOut, ChevronDown } from 'lucide-react';
+import { PetAccessoriesPage } from './components/PetAccessoriesPage';
 import { HashRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import { ScrollToTop } from './components/ScrollToTop';
 
@@ -23,7 +24,6 @@ import { PetList } from './components/PetList';
 import { GroomingServicesPage } from './components/GroomingServicesPage';
 import { VeterinaryReferralsPage } from './components/VeterinaryReferralsPage';
 import { ServicesPage } from './components/ServicesPage';
-import { PetAccessoriesPage } from './components/PetAccessoriesPage';
 
 // Utilities
 const scrollToTop = () => {
@@ -625,6 +625,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/pet-food" element={<PetFoodPage />} />
+          <Route path="/pet-accessories" element={<PetAccessoriesPage />} />
           <Route path="/cart-checkout" element={<CartCheckoutPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/services" element={<ServicesPage />} />
@@ -635,7 +636,6 @@ function App() {
           <Route path="/checkout/:id" element={<CheckoutPage pets={pets} />} />
           <Route path="/adopt" element={<PetList pets={pets} />} />
           <Route path="/adopt/:id" element={<AdoptPage pets={pets} />} />
-          <Route path="/pet-accessories" element={<PetAccessoriesPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
