@@ -11,7 +11,7 @@ interface AuthFormData {
 }
 
 // Use the full API URL including the /api prefix
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5003/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export const LoginPage: React.FC = () => {
   const [formData, setFormData] = useState<AuthFormData>({ email: '', password: '' });
@@ -34,7 +34,7 @@ export const LoginPage: React.FC = () => {
 
     try {
       console.log('Attempting to login with API URL:', API_URL);
-      const response = await fetch(`${API_URL}/auth/login`, {
+      const response = await fetch(`${API_URL.replace(/\/api$/, '')}/api/auth/login`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -159,7 +159,7 @@ export const SignupPage: React.FC = () => {
 
     try {
       console.log('Attempting to signup with API URL:', API_URL);
-      const response = await fetch(`${API_URL}/auth/signup`, {
+      const response = await fetch(`${API_URL.replace(/\/api$/, '')}/api/auth/signup`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',

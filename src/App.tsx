@@ -625,6 +625,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/pet-food" element={<PetFoodPage />} />
+          <Route path="/pet-accessories" element={<PetAccessoriesPage />} />
           <Route path="/cart-checkout" element={<CartCheckoutPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/services" element={<ServicesPage />} />
@@ -632,7 +633,6 @@ function App() {
           <Route path="/pet-adoption" element={<PetAdoptionPage />} />
           <Route path="/grooming-services" element={<GroomingServicesPage />} />
           <Route path="/veterinary-referrals" element={<VeterinaryReferralsPage />} />
-          <Route path="/pet-accessories" element={<PetAccessoriesPage />} />
           <Route path="/checkout/:id" element={<CheckoutPage pets={pets} />} />
           <Route path="/adopt" element={<PetList pets={pets} />} />
           <Route path="/adopt/:id" element={<AdoptPage pets={pets} />} />
