@@ -23,6 +23,7 @@ import { PetList } from './components/PetList';
 import { GroomingServicesPage } from './components/GroomingServicesPage';
 import { VeterinaryReferralsPage } from './components/VeterinaryReferralsPage';
 import { ServicesPage } from './components/ServicesPage';
+import { PetAccessoriesPage } from './components/PetAccessoriesPage';
 
 // Utilities
 const scrollToTop = () => {
@@ -508,6 +509,9 @@ function App() {
               <Link to="/pet-food" className="text-white hover:text-blue-300 flex items-center transition-colors" onClick={scrollToTop}>
                 <span>Pet Food</span>
               </Link>
+              <Link to="/pet-accessories" className="text-white hover:text-blue-300 flex items-center transition-colors" onClick={scrollToTop}>
+                <span>Pet Accessories</span>
+              </Link>
               <div className="relative group">
                 <button className="text-white hover:text-blue-300 flex items-center gap-1 py-2 transition-colors">
                   <span>Services</span>
@@ -557,6 +561,13 @@ function App() {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Pet Food
+              </Link>
+              <Link 
+                to="/pet-accessories" 
+                className="text-white hover:text-blue-100 block px-3 py-2 rounded-md text-base font-medium"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Pet Accessories
               </Link>
               <div className="text-white px-3 py-2">
                 <button
@@ -621,6 +632,7 @@ function App() {
           <Route path="/pet-adoption" element={<PetAdoptionPage />} />
           <Route path="/grooming-services" element={<GroomingServicesPage />} />
           <Route path="/veterinary-referrals" element={<VeterinaryReferralsPage />} />
+          <Route path="/pet-accessories" element={<PetAccessoriesPage />} />
           <Route path="/checkout/:id" element={<CheckoutPage pets={pets} />} />
           <Route path="/adopt" element={<PetList pets={pets} />} />
           <Route path="/adopt/:id" element={<AdoptPage pets={pets} />} />
