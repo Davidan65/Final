@@ -1,7 +1,7 @@
 import { useState, useEffect, Suspense } from 'react';
-import { Dog, Cat, Bird, Fish, ShoppingCart, Home, Menu, X, LogOut, ChevronDown } from 'lucide-react';
+import { ShoppingCart, Home, Menu, X, LogOut, ChevronDown } from 'lucide-react';
 import { PetAccessoriesPage } from './components/PetAccessoriesPage';
-import { Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
+import { Routes, Route, Link, Navigate } from 'react-router-dom';
 import { ScrollToTop } from './components/ScrollToTop';
 import { useAuth } from './contexts/AuthContext';
 import { CartProvider } from './contexts/CartContext';
@@ -436,10 +436,6 @@ const App = () => {
     const matchesType = !selectedType || pet.type === selectedType;
     return matchesSearch && matchesType;
   });
-
-  const indexOfLastPet = currentPage * petsPerPage;
-  const indexOfFirstPet = indexOfLastPet - petsPerPage;
-  const currentPets = filteredPets.slice(indexOfFirstPet, indexOfLastPet);
 
   // If user is not authenticated, only render the auth pages
   if (!user) {

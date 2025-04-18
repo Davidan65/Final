@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Link } from 'react-router-dom';
 import { ShoppingCart, Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -130,13 +129,13 @@ export const PetAccessoriesPage: React.FC = () => {
                 className="w-full h-48 object-cover"
               />
               <div className="p-4">
-                <h3 className="text-lg font-semibold mb-2">{accessory.name}</h3>
-                <p className="text-gray-600 mb-2">{accessory.description}</p>
+              <h3 className="text-lg font-semibold mb-2">{accessory.name}</h3>
+              <p className="text-gray-600 mb-2">{accessory.description}</p>
                 <div className="flex justify-between items-center">
                   <span className="text-lg font-bold">${accessory.price.toFixed(2)}</span>
-                  <button
-                    onClick={() => handleAddToCart(accessory)}
-                    disabled={!isAuthenticated || isItemInCart(accessory.id)}
+              <button
+                onClick={() => handleAddToCart(accessory)}
+                disabled={!isAuthenticated || isItemInCart(accessory.id)}
                     className={`px-4 py-2 rounded-md ${
                       !isAuthenticated || isItemInCart(accessory.id)
                         ? 'bg-gray-300 cursor-not-allowed'
@@ -148,7 +147,7 @@ export const PetAccessoriesPage: React.FC = () => {
                       : isItemInCart(accessory.id)
                       ? 'Added to Cart'
                       : 'Add to Cart'}
-                  </button>
+              </button>
                 </div>
               </div>
             </div>
