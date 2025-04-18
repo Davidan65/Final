@@ -120,6 +120,44 @@ export const PetAccessoriesPage: React.FC = () => {
   // Get unique categories
   const categories = ['All', ...new Set(accessories.map(a => a.category))];
 
+  const handleUpdateAccessory = async (id: string, updatedAccessory: Partial<Accessory>) => {
+    try {
+      const response = await fetch(`https://pet-adoption-backend.onrender.com/api/accessories/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedAccessory),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to update accessory');
+      }
+      // Refresh the accessories list
+      const fetchResponse = await fetch('https://pet-adoption-backend.onrender.com/api/accessories');
+      const data = await fetchResponse.json();
+      setAccessories(data);
+    } catch (error) {
+      console.error('Error updating accessory:', error);
+    }
+  };
+
+  const handleDeleteAccessory = async (id: string) => {
+    try {
+      const response = await fetch(`https://pet-adoption-backend.onrender.com/api/accessories/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        throw new Error('Failed to delete accessory');
+      }
+      // Refresh the accessories list
+      const fetchResponse = await fetch('https://pet-adoption-backend.onrender.com/api/accessories');
+      const data = await fetchResponse.json();
+      setAccessories(data);
+    } catch (error) {
+      console.error('Error deleting accessory:', error);
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-7xl mx-auto">

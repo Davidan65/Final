@@ -57,11 +57,14 @@ export const PetFoodPage: React.FC = () => {
 
   const fetchPetFoods = async () => {
     try {
-      const response = await fetch('http://localhost:5002/api/pet-food');
+      const response = await fetch('https://pet-adoption-backend.onrender.com/api/pet-food');
+      if (!response.ok) {
+        throw new Error('Failed to fetch pet food');
+      }
       const data = await response.json();
       setPetFoods(data);
     } catch (error) {
-      console.error('Error fetching pet foods:', error);
+      console.error('Error fetching pet food:', error);
     }
   };
 
@@ -70,8 +73,8 @@ export const PetFoodPage: React.FC = () => {
     try {
       const token = localStorage.getItem('token');
       const url = editingFood 
-        ? `http://localhost:5002/api/pet-food/${editingFood.id}`
-        : 'http://localhost:5002/api/pet-food';
+        ? `https://pet-adoption-backend.onrender.com/api/pet-food/${editingFood.id}`
+        : 'https://pet-adoption-backend.onrender.com/api/pet-food';
       
       const response = await fetch(url, {
         method: editingFood ? 'PUT' : 'POST',
@@ -105,7 +108,7 @@ export const PetFoodPage: React.FC = () => {
     
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5002/api/pet-food/${id}`, {
+      const response = await fetch(`https://pet-adoption-backend.onrender.com/api/pet-food/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
