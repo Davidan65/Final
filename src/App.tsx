@@ -419,8 +419,6 @@ const App = () => {
   const { user, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isServicesOpen, setIsServicesOpen] = useState(false);
-  const [searchTerm] = useState('');
-  const [selectedType] = useState('');
 
   // If user is not authenticated, only render the auth pages
   if (!user) {
