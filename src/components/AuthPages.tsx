@@ -8,6 +8,7 @@ interface AuthFormData {
   email: string;
   password: string;
   confirmPassword?: string;
+  role?: string;
 }
 
 // Use the full API URL including the /api prefix
@@ -48,14 +49,24 @@ export const LoginPage: React.FC = () => {
       console.log('Login response data:', data);
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to login');
+        throw new Error(data.error || 'Failed to log in');
       }
 
-      login(data.token);
-      navigate(redirectPath);
+      // Ensure we have both token and user data
+      if (!data.token || !data.user) {
+        throw new Error('Invalid response from server');
+      }
+
+      console.log('Logging in with:', {
+        token: data.token,
+        user: data.user
+      });
+
+      login(data.token, data.user);
+      navigate('/');
     } catch (err) {
       console.error('Login error:', err);
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : 'An error occurred during login');
     } finally {
       setIsLoading(false);
     }
@@ -143,7 +154,12 @@ export const LoginPage: React.FC = () => {
 };
 
 export const SignupPage: React.FC = () => {
-  const [formData, setFormData] = useState<AuthFormData>({ email: '', password: '', confirmPassword: '' });
+  const [formData, setFormData] = useState<AuthFormData>({ 
+    email: '', 
+    password: '', 
+    confirmPassword: '',
+    role: 'user'
+  });
   const [error, setError] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -177,7 +193,7 @@ export const SignupPage: React.FC = () => {
         throw new Error(data.error || 'Failed to sign up');
       }
 
-      login(data.token);
+      login(data.token, data.user);
       navigate('/');
     } catch (err) {
       console.error('Signup error:', err);
@@ -244,7 +260,7 @@ export const SignupPage: React.FC = () => {
                 name="confirmPassword"
                 type={showConfirmPassword ? "text" : "password"}
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
                 placeholder="Confirm Password"
                 value={formData.confirmPassword}
                 onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
@@ -260,6 +276,19 @@ export const SignupPage: React.FC = () => {
                   <Eye className="h-5 w-5" aria-hidden="true" />
                 )}
               </button>
+            </div>
+            <div>
+              <label htmlFor="role" className="sr-only">Role</label>
+              <select
+                id="role"
+                name="role"
+                value={formData.role}
+                onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+              >
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+              </select>
             </div>
           </div>
 

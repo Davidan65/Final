@@ -24,6 +24,10 @@ import { PetList } from './components/PetList';
 import { GroomingServicesPage } from './components/GroomingServicesPage';
 import { VeterinaryReferralsPage } from './components/VeterinaryReferralsPage';
 import { ServicesPage } from './components/ServicesPage';
+import EnhancedServicesPage from './components/EnhancedServicesPage';
+import PetTrainingResourcesPage from './components/PetTrainingResourcesPage';
+import EmergencyFeaturesPage from './components/EmergencyFeaturesPage';
+import { AdminPanel } from './components/AdminPanel';
 
 // Utilities
 const scrollToTop = () => {
@@ -411,14 +415,19 @@ const pets: Pet[] = [
 ];
 
 function App() {
-  const { isAuthenticated, token, logout } = useAuth();
-  console.log("Authentication state:", isAuthenticated, "Token:", token);
+  const { isAuthenticated, user, logout } = useAuth();
+  console.log("Authentication state:", {
+    isAuthenticated,
+    user,
+    userRole: user?.role,
+    userEmail: user?.email
+  });
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
+
   // Reset page when filters change
   React.useEffect(() => {
     setCurrentPage(1);
@@ -522,6 +531,9 @@ function App() {
                   <Link to="/pet-training" className="block px-4 py-2 text-gray-800 hover:bg-blue-50" onClick={scrollToTop}>Pet Training</Link>
                   <Link to="/veterinary-referrals" className="block px-4 py-2 text-gray-800 hover:bg-blue-50" onClick={scrollToTop}>Veterinary Referrals</Link>
                   <Link to="/grooming-services" className="block px-4 py-2 text-gray-800 hover:bg-blue-50" onClick={scrollToTop}>Grooming Services</Link>
+                  <Link to="/enhanced-services" className="block px-4 py-2 text-gray-800 hover:bg-blue-50" onClick={scrollToTop}>Enhanced Services</Link>
+                  <Link to="/training-resources" className="block px-4 py-2 text-gray-800 hover:bg-blue-50" onClick={scrollToTop}>Training Resources</Link>
+                  <Link to="/emergency-features" className="block px-4 py-2 text-gray-800 hover:bg-blue-50" onClick={scrollToTop}>Emergency Features</Link>
                   <Link to="/pet-adoption" className="block px-4 py-2 text-gray-800 hover:bg-blue-50" onClick={scrollToTop}>Pet Adoption</Link>
                 </div>
               </div>
@@ -531,6 +543,15 @@ function App() {
               <Link to="/cart-checkout" className="text-white hover:text-blue-300 transition-colors" onClick={scrollToTop}>
                 <ShoppingCart className="h-6 w-6" />
               </Link>
+              {user?.role === 'admin' && (
+                <Link 
+                  to="/admin" 
+                  className="text-white hover:text-blue-300 flex items-center transition-colors"
+                  onClick={scrollToTop}
+                >
+                  <span>Admin Panel</span>
+                </Link>
+              )}
               <button 
                 onClick={() => logout()}
                 className="text-white hover:text-blue-300 flex items-center gap-1 ml-4 bg-blue-800 hover:bg-blue-900 px-3 py-1 rounded-md transition-colors"
@@ -584,6 +605,9 @@ function App() {
                   <Link to="/pet-training" className="text-white hover:text-blue-100 block py-1" onClick={() => setMobileMenuOpen(false)}>Pet Training</Link>
                   <Link to="/veterinary-referrals" className="text-white hover:text-blue-100 block py-1" onClick={() => setMobileMenuOpen(false)}>Veterinary Referrals</Link>
                   <Link to="/grooming-services" className="text-white hover:text-blue-100 block py-1" onClick={() => setMobileMenuOpen(false)}>Grooming Services</Link>
+                  <Link to="/enhanced-services" className="text-white hover:text-blue-100 block py-1" onClick={() => setMobileMenuOpen(false)}>Enhanced Services</Link>
+                  <Link to="/training-resources" className="text-white hover:text-blue-100 block py-1" onClick={() => setMobileMenuOpen(false)}>Training Resources</Link>
+                  <Link to="/emergency-features" className="text-white hover:text-blue-100 block py-1" onClick={() => setMobileMenuOpen(false)}>Emergency Features</Link>
                   <Link to="/pet-adoption" className="text-white hover:text-blue-100 block py-1" onClick={() => setMobileMenuOpen(false)}>Pet Adoption</Link>
                 </div>
               </div>
@@ -614,6 +638,16 @@ function App() {
                 <LogOut className="h-5 w-5" />
                 <span>Logout</span>
               </button>
+
+              {user?.role === 'admin' && (
+                <Link 
+                  to="/admin" 
+                  className="text-white hover:text-blue-100 block px-3 py-2 rounded-md text-base font-medium"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Admin Panel
+                </Link>
+              )}
             </div>
             </div>
           </div>
@@ -636,6 +670,10 @@ function App() {
           <Route path="/checkout/:id" element={<CheckoutPage pets={pets} />} />
           <Route path="/adopt" element={<PetList pets={pets} />} />
           <Route path="/adopt/:id" element={<AdoptPage pets={pets} />} />
+          <Route path="/enhanced-services" element={<EnhancedServicesPage />} />
+          <Route path="/training-resources" element={<PetTrainingResourcesPage />} />
+          <Route path="/emergency-features" element={<EmergencyFeaturesPage />} />
+          <Route path="/admin" element={<AdminPanel />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
