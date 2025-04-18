@@ -119,34 +119,40 @@ export const PetAccessoriesPage: React.FC = () => {
         </div>
 
         {/* Accessories Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {currentAccessories.map((accessory) => (
-            <div key={accessory.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-              <img
-                src={accessory.image}
-                alt={accessory.name}
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-4">
-              <h3 className="text-lg font-semibold mb-2">{accessory.name}</h3>
-              <p className="text-gray-600 mb-2">{accessory.description}</p>
-                <div className="flex justify-between items-center">
-                  <span className="text-lg font-bold">${accessory.price.toFixed(2)}</span>
-              <button
-                onClick={() => handleAddToCart(accessory)}
-                disabled={!isAuthenticated || isItemInCart(accessory.id)}
-                    className={`px-4 py-2 rounded-md ${
-                      !isAuthenticated || isItemInCart(accessory.id)
-                        ? 'bg-gray-300 cursor-not-allowed'
-                        : 'bg-blue-600 hover:bg-blue-700 text-white'
-                    }`}
-                  >
-                    {!isAuthenticated
-                      ? 'Login to Add'
-                      : isItemInCart(accessory.id)
-                      ? 'Added to Cart'
-                      : 'Add to Cart'}
-              </button>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 px-4 sm:px-6">
+          {filteredAccessories.map((accessory) => (
+            <div key={accessory.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+              <div className="relative">
+                <img 
+                  src={accessory.image} 
+                  alt={accessory.name}
+                  className="w-full h-48 sm:h-56 object-cover"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = 'https://via.placeholder.com/300x200?text=No+Image';
+                  }}
+                />
+                <div className="p-4">
+                  <h3 className="text-lg font-semibold mb-2">{accessory.name}</h3>
+                  <p className="text-gray-600 mb-2">{accessory.description}</p>
+                  <div className="flex justify-between items-center">
+                    <span className="text-lg font-bold">${accessory.price.toFixed(2)}</span>
+                    <button
+                      onClick={() => handleAddToCart(accessory)}
+                      disabled={!isAuthenticated || isItemInCart(accessory.id)}
+                      className={`px-4 py-2 rounded-md ${
+                        !isAuthenticated || isItemInCart(accessory.id)
+                          ? 'bg-gray-300 cursor-not-allowed'
+                          : 'bg-blue-600 hover:bg-blue-700 text-white'
+                      }`}
+                    >
+                      {!isAuthenticated
+                        ? 'Login to Add'
+                        : isItemInCart(accessory.id)
+                        ? 'Added to Cart'
+                        : 'Add to Cart'}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

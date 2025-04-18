@@ -322,15 +322,18 @@ export const PetFoodPage: React.FC = () => {
         </div>
       )}
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 px-4 sm:px-6">
         {currentPetFoods.map(food => (
-          <div key={food.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-            <div className="relative pb-[66.67%]">
+          <div key={food.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+            <div className="relative">
               <img 
                 src={food.image} 
-                alt={food.name} 
-                className="absolute top-0 left-0 w-full h-full object-cover"
-                loading="lazy"
+                alt={food.name}
+                className="w-full h-48 sm:h-56 object-cover"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = 'https://via.placeholder.com/300x200?text=No+Image';
+                }}
               />
               {user?.role === 'admin' && (
                 <div className="absolute top-2 right-2 flex gap-2">
