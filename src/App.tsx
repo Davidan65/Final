@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { Dog, Cat, Bird, Fish, ShoppingCart, Home, Menu, X, LogOut, ChevronDown } from 'lucide-react';
 import { PetAccessoriesPage } from './components/PetAccessoriesPage';
 import { Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
@@ -25,9 +25,9 @@ import { PetList } from './components/PetList';
 import { GroomingServicesPage } from './components/GroomingServicesPage';
 import { VeterinaryReferralsPage } from './components/VeterinaryReferralsPage';
 import { ServicesPage } from './components/ServicesPage';
-import EnhancedServicesPage from './components/EnhancedServicesPage';
-import PetTrainingResourcesPage from './components/PetTrainingResourcesPage';
-import EmergencyFeaturesPage from './components/EmergencyFeaturesPage';
+import { EnhancedServicesPage } from './components/EnhancedServicesPage';
+import { PetTrainingResourcesPage } from './components/PetTrainingResourcesPage';
+import { EmergencyFeaturesPage } from './components/EmergencyFeaturesPage';
 import { AdminPanel } from './components/AdminPanel';
 
 // Utilities
@@ -420,7 +420,6 @@ const App = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isServicesOpen, setIsServicesOpen] = useState(false);
-  const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState('');

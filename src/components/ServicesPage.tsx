@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Shield, Star, PawPrint, Heart, Clock, MapPin, Phone } from 'lucide-react';
+import { Shield, Star, PawPrint, Heart, MapPin, Phone } from 'lucide-react';
 
 const scrollToTop = () => {
   window.scrollTo(0, 0);

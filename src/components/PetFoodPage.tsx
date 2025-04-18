@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
-import { Filter, Star, Info, ShoppingBag, Shield, Heart, Plus, Edit, Trash2 } from 'lucide-react';
+import { Filter, Star, ShoppingBag, Shield, Heart, Plus, Edit, Trash2, ShoppingCart, ChevronLeft, ChevronRight } from 'lucide-react';
 
 type PetFood = {
   id: number;

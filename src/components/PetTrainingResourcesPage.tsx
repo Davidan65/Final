@@ -26,13 +26,10 @@ interface TrainingProgress {
     date: string;
 }
 
-const PetTrainingResourcesPage: React.FC = () => {
+export const PetTrainingResourcesPage: React.FC = () => {
     const [videos, setVideos] = useState<TrainingVideo[]>([]);
     const [guides, setGuides] = useState<BehaviorGuide[]>([]);
     const [progress, setProgress] = useState<TrainingProgress[]>([]);
-    const [selectedCategory, setSelectedCategory] = useState<string>('all');
-    const [selectedIssue, setSelectedIssue] = useState<string>('all');
-    const [selectedBreed, setSelectedBreed] = useState<string>('all');
 
     useEffect(() => {
         // Fetch training videos
@@ -168,6 +165,4 @@ const PetTrainingResourcesPage: React.FC = () => {
             </section>
         </div>
     );
-};
-
-export default PetTrainingResourcesPage; 
+}; 

@@ -26,17 +26,16 @@ interface FirstAidInfo {
     situation: string;
 }
 
-const EmergencyFeaturesPage: React.FC = () => {
+export const EmergencyFeaturesPage: React.FC = () => {
     const [guides, setGuides] = useState<EmergencyGuide[]>([]);
-    const [lostPets, setLostPets] = useState<LostPetReport[]>([]);
+    const [lostPetReports, setLostPetReports] = useState<LostPetReport[]>([]);
     const [firstAidInfo, setFirstAidInfo] = useState<FirstAidInfo[]>([]);
-    const [selectedSituation, setSelectedSituation] = useState<string>('all');
-    const [newLostPetReport, setNewLostPetReport] = useState({
+    const [newLostPetReport, setNewLostPetReport] = useState<Partial<LostPetReport>>({
         petId: '',
         lastSeen: '',
         location: '',
         description: '',
-        contactInfo: '',
+        contactInfo: ''
     });
 
     useEffect(() => {
@@ -54,7 +53,7 @@ const EmergencyFeaturesPage: React.FC = () => {
         const fetchLostPets = async () => {
             try {
                 // Implementation for fetching lost pets
-                setLostPets([]);
+                setLostPetReports([]);
             } catch (error) {
                 console.error('Error fetching lost pets:', error);
             }
@@ -170,7 +169,7 @@ const EmergencyFeaturesPage: React.FC = () => {
                     <div className="bg-white p-4 rounded-lg shadow-md">
                         <h3 className="text-lg font-medium mb-4">Recent Lost Pet Reports</h3>
                         <div className="space-y-4">
-                            {lostPets.map((report) => (
+                            {lostPetReports.map((report) => (
                                 <div key={report.id} className="border-b pb-4">
                                     <h4 className="font-medium">Pet ID: {report.petId}</h4>
                                     <p className="text-sm text-gray-600">Last Seen: {report.lastSeen}</p>

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { Calendar, Clock, MapPin, Phone, Mail } from 'lucide-react';
 
-const EnhancedServicesPage: React.FC = () => {
-    const navigate = useNavigate();
+export const EnhancedServicesPage: React.FC = () => {
     const [selectedService, setSelectedService] = useState<string>('');
     const [formData, setFormData] = useState({
         petId: '',
@@ -143,6 +143,4 @@ const EnhancedServicesPage: React.FC = () => {
             </div>
         </div>
     );
-};
-
-export default EnhancedServicesPage; 
+}; 
