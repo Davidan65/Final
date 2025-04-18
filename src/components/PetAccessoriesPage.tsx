@@ -120,7 +120,7 @@ export const PetAccessoriesPage: React.FC = () => {
 
         {/* Accessories Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 px-4 sm:px-6">
-          {filteredAccessories.map((accessory) => (
+          {currentAccessories.map((accessory) => (
             <div key={accessory.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
               <div className="relative">
                 <img 
