@@ -38,7 +38,12 @@ export const PetAccessoriesPage: React.FC = () => {
     };
 
     fetchAccessories();
+    scrollToTop();
   }, []);
+
+  useEffect(() => {
+    scrollToTop();
+  }, [currentPage]);
 
   const filteredAccessories = useMemo(() => {
     return accessories.filter(accessory => {

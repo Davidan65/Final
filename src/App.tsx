@@ -1,12 +1,13 @@
-import React, { useState, Suspense } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { Dog, Cat, Bird, Fish, ShoppingCart, Home, Menu, X, LogOut, ChevronDown } from 'lucide-react';
 import { PetAccessoriesPage } from './components/PetAccessoriesPage';
-import { HashRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
+import { Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
 import { ScrollToTop } from './components/ScrollToTop';
-
-// Contexts
+import { useAuth } from './contexts/AuthContext';
 import { CartProvider } from './contexts/CartContext';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import './App.css';
 
 // Components
 import ErrorBoundary from './components/ErrorBoundary';
@@ -414,24 +415,21 @@ const pets: Pet[] = [
   }
 ];
 
-function App() {
-  const { isAuthenticated, user, logout } = useAuth();
-  console.log("Authentication state:", {
-    isAuthenticated,
-    user,
-    userRole: user?.role,
-    userEmail: user?.email
-  });
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedType, setSelectedType] = useState<string | null>(null);
+const App = () => {
+  const { user, logout } = useAuth();
+  const location = useLocation();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isServicesOpen, setIsServicesOpen] = useState(false);
+  const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedType, setSelectedType] = useState('');
 
   // Reset page when filters change
-  React.useEffect(() => {
+  useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, selectedType]);
+
   const petsPerPage = 8;
 
   const filteredPets = pets.filter(pet => {
@@ -458,240 +456,221 @@ function App() {
   };
 
   // If user is not authenticated, only render the auth pages
-  if (!isAuthenticated) {
+  if (!user) {
     return (
-      <Router>
-      <ScrollToTop />
-        <div className="min-h-screen bg-gray-100">
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignupPage />} />
-            <Route path="*" element={<Navigate to="/signup" replace />} />
-          </Routes>
-        </div>
-      </Router>
+      <div className="min-h-screen bg-gray-100">
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="*" element={<Navigate to="/signup" replace />} />
+        </Routes>
+      </div>
     );
   }
 
   // User is authenticated, render the full app
   return (
     <ErrorBoundary>
-      <Router>
-      <ScrollToTop />
-        <CartProvider>
-          <Suspense fallback={<div>Loading...</div>}>
-            <div className="min-h-screen bg-gray-100">
+      <CartProvider>
+        <Suspense fallback={<div>Loading...</div>}>
+          <ScrollToTop />
+          <div className="min-h-screen bg-gray-50">
+            <nav className="bg-blue-600 shadow-lg">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex justify-between h-16">
+                  {/* Logo */}
+                  <div className="flex-shrink-0 flex items-center">
+                    <Link to="/" className="text-xl font-bold text-white">
+                      PetCare
+                    </Link>
+                  </div>
 
-      <nav className="bg-blue-700 shadow-lg fixed w-full top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <Link to="/" className="flex items-center" onClick={scrollToTop}>
-                <span className="text-xl font-bold text-white hover:text-blue-300 transition-colors">Pet Store</span>
-              </Link>
-            </div>
+                  {/* Desktop menu */}
+                  <div className="hidden md:flex items-center space-x-4 ml-6">
+                    <Link to="/" className="text-white hover:text-blue-300 flex items-center transition-colors" onClick={scrollToTop}>
+                      <Home className="h-5 w-5" />
+                      <span>Home</span>
+                    </Link>
+                    <Link to="/pet-food" className="text-white hover:text-blue-300 flex items-center transition-colors" onClick={scrollToTop}>
+                      <span>Pet Food</span>
+                    </Link>
+                    <Link to="/pet-accessories" className="text-white hover:text-blue-300 flex items-center transition-colors" onClick={scrollToTop}>
+                      <span>Pet Accessories</span>
+                    </Link>
+                    <div className="relative group">
+                      <button className="text-white hover:text-blue-300 flex items-center gap-1 py-2 transition-colors">
+                        <span>Services</span>
+                        <ChevronDown className="h-4 w-4" />
+                      </button>
+                      <div className="absolute left-0 mt-1 w-48 bg-white rounded-md shadow-lg py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                        <Link to="/services" className="block px-4 py-2 text-gray-800 hover:bg-blue-50 font-semibold" onClick={scrollToTop}>All Services</Link>
+                        <Link to="/pet-training" className="block px-4 py-2 text-gray-800 hover:bg-blue-50" onClick={scrollToTop}>Pet Training</Link>
+                        <Link to="/veterinary-referrals" className="block px-4 py-2 text-gray-800 hover:bg-blue-50" onClick={scrollToTop}>Veterinary Referrals</Link>
+                        <Link to="/grooming-services" className="block px-4 py-2 text-gray-800 hover:bg-blue-50" onClick={scrollToTop}>Grooming Services</Link>
+                        <Link to="/enhanced-services" className="block px-4 py-2 text-gray-800 hover:bg-blue-50" onClick={scrollToTop}>Enhanced Services</Link>
+                        <Link to="/training-resources" className="block px-4 py-2 text-gray-800 hover:bg-blue-50" onClick={scrollToTop}>Training Resources</Link>
+                        <Link to="/emergency-features" className="block px-4 py-2 text-gray-800 hover:bg-blue-50" onClick={scrollToTop}>Emergency Features</Link>
+                        <Link to="/pet-adoption" className="block px-4 py-2 text-gray-800 hover:bg-blue-50" onClick={scrollToTop}>Pet Adoption</Link>
+                      </div>
+                    </div>
+                    <Link to="/about" className="text-white hover:text-blue-300 flex items-center transition-colors" onClick={scrollToTop}>
+                      <span>About</span>
+                    </Link>
+                    <Link to="/cart-checkout" className="text-white hover:text-blue-300 transition-colors" onClick={scrollToTop}>
+                      <ShoppingCart className="h-6 w-6" />
+                    </Link>
+                    {user?.role === 'admin' && (
+                      <Link to="/admin" className="text-white hover:text-blue-300 flex items-center transition-colors" onClick={scrollToTop}>
+                        <span>Admin Panel</span>
+                      </Link>
+                    )}
+                    <button 
+                      onClick={() => logout()}
+                      className="text-white hover:text-blue-300 flex items-center gap-1 ml-4 bg-blue-800 hover:bg-blue-900 px-3 py-1 rounded-md transition-colors"
+                    >
+                      <LogOut className="h-5 w-5" />
+                      <span>Logout</span>
+                    </button>
+                  </div>
 
-            {/* Mobile menu button */}
-            <div className="flex items-center md:hidden">
-              <button
-                type="button"
-                className="inline-flex items-center justify-center p-2 rounded-md text-white hover:text-blue-300 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white transition-colors duration-200"
-                aria-controls="mobile-menu"
-                aria-expanded="false"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              >
-                <span className="sr-only">Open main menu</span>
-                {mobileMenuOpen ? (
-                  <X className="block h-6 w-6" aria-hidden="true" />
-                ) : (
-                  <Menu className="block h-6 w-6" aria-hidden="true" />
-                )}
-              </button>
-            </div>
-
-            {/* Desktop menu */}
-            <div className="hidden md:flex items-center space-x-4">
-              <Link to="/" className="text-white hover:text-blue-300 flex items-center transition-colors" onClick={scrollToTop}>
-                <Home className="h-5 w-5" />
-                <span>Home</span>
-              </Link>
-              <Link to="/pet-food" className="text-white hover:text-blue-300 flex items-center transition-colors" onClick={scrollToTop}>
-                <span>Pet Food</span>
-              </Link>
-              <Link to="/pet-accessories" className="text-white hover:text-blue-300 flex items-center transition-colors" onClick={scrollToTop}>
-                <span>Pet Accessories</span>
-              </Link>
-              <div className="relative group">
-                <button className="text-white hover:text-blue-300 flex items-center gap-1 py-2 transition-colors">
-                  <span>Services</span>
-                  <ChevronDown className="h-4 w-4" />
-                </button>
-                <div className="absolute left-0 mt-1 w-48 bg-white rounded-md shadow-lg py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                  <Link to="/services" className="block px-4 py-2 text-gray-800 hover:bg-blue-50 font-semibold" onClick={scrollToTop}>All Services</Link>
-                  <Link to="/pet-training" className="block px-4 py-2 text-gray-800 hover:bg-blue-50" onClick={scrollToTop}>Pet Training</Link>
-                  <Link to="/veterinary-referrals" className="block px-4 py-2 text-gray-800 hover:bg-blue-50" onClick={scrollToTop}>Veterinary Referrals</Link>
-                  <Link to="/grooming-services" className="block px-4 py-2 text-gray-800 hover:bg-blue-50" onClick={scrollToTop}>Grooming Services</Link>
-                  <Link to="/enhanced-services" className="block px-4 py-2 text-gray-800 hover:bg-blue-50" onClick={scrollToTop}>Enhanced Services</Link>
-                  <Link to="/training-resources" className="block px-4 py-2 text-gray-800 hover:bg-blue-50" onClick={scrollToTop}>Training Resources</Link>
-                  <Link to="/emergency-features" className="block px-4 py-2 text-gray-800 hover:bg-blue-50" onClick={scrollToTop}>Emergency Features</Link>
-                  <Link to="/pet-adoption" className="block px-4 py-2 text-gray-800 hover:bg-blue-50" onClick={scrollToTop}>Pet Adoption</Link>
+                  {/* Mobile menu button */}
+                  <div className="flex items-center md:hidden">
+                    <button
+                      type="button"
+                      className="inline-flex items-center justify-center p-2 rounded-md text-white hover:text-blue-300 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white transition-colors duration-200"
+                      aria-controls="mobile-menu"
+                      aria-expanded="false"
+                      onClick={() => setIsMenuOpen(!isMenuOpen)}
+                    >
+                      <span className="sr-only">Open main menu</span>
+                      {isMenuOpen ? (
+                        <X className="block h-6 w-6" aria-hidden="true" />
+                      ) : (
+                        <Menu className="block h-6 w-6" aria-hidden="true" />
+                      )}
+                    </button>
+                  </div>
                 </div>
               </div>
-              <Link to="/about" className="text-white hover:text-blue-300 flex items-center transition-colors" onClick={scrollToTop}>
-                <span>About</span>
-              </Link>
-              <Link to="/cart-checkout" className="text-white hover:text-blue-300 transition-colors" onClick={scrollToTop}>
-                <ShoppingCart className="h-6 w-6" />
-              </Link>
-              {user?.role === 'admin' && (
-                <Link 
-                  to="/admin" 
-                  className="text-white hover:text-blue-300 flex items-center transition-colors"
-                  onClick={scrollToTop}
-                >
-                  <span>Admin Panel</span>
-                </Link>
-              )}
-              <button 
-                onClick={() => logout()}
-                className="text-white hover:text-blue-300 flex items-center gap-1 ml-4 bg-blue-800 hover:bg-blue-900 px-3 py-1 rounded-md transition-colors"
-              >
-                <LogOut className="h-5 w-5" />
-                <span>Logout</span>
-              </button>
-            </div>
-          </div>
-        </div>
 
-        {/* Mobile menu, show/hide based on menu state. */}
-        {mobileMenuOpen && (
-          <div className="md:hidden" id="mobile-menu">
-            <div className={`px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-blue-400 transform transition-all duration-300 ease-in-out ${mobileMenuOpen ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'}`}>
-              <div className="space-y-2">
-              <Link 
-                to="/" 
-                className="text-white hover:text-blue-100 block px-3 py-2 rounded-md text-base font-medium flex items-center gap-2"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <Home className="h-5 w-5" />
-                <span>Home</span>
-              </Link>
-              <Link 
-                to="/pet-food" 
-                className="text-white hover:text-blue-100 block px-3 py-2 rounded-md text-base font-medium"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Pet Food
-              </Link>
-              <Link 
-                to="/pet-accessories" 
-                className="text-white hover:text-blue-100 block px-3 py-2 rounded-md text-base font-medium"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Pet Accessories
-              </Link>
-              <div className="text-white px-3 py-2">
-                <button
-                  onClick={() => setMobileServicesOpen(!mobileServicesOpen)}
-                  className="flex items-center justify-between w-full text-left font-medium transition-colors duration-200 hover:text-blue-200"
-                >
-                  <span>Services</span>
-                  <span className={`transition-transform duration-300 ${mobileServicesOpen ? 'rotate-180' : ''}`}>
-                    ▼
-                  </span>
-                </button>
-                <div className={`pl-4 space-y-2 mt-2 ${mobileServicesOpen ? 'block' : 'hidden'}`}>
-                  <Link to="/services" className="text-white hover:text-blue-100 block py-1 font-semibold" onClick={() => setMobileMenuOpen(false)}>All Services</Link>
-                  <Link to="/pet-training" className="text-white hover:text-blue-100 block py-1" onClick={() => setMobileMenuOpen(false)}>Pet Training</Link>
-                  <Link to="/veterinary-referrals" className="text-white hover:text-blue-100 block py-1" onClick={() => setMobileMenuOpen(false)}>Veterinary Referrals</Link>
-                  <Link to="/grooming-services" className="text-white hover:text-blue-100 block py-1" onClick={() => setMobileMenuOpen(false)}>Grooming Services</Link>
-                  <Link to="/enhanced-services" className="text-white hover:text-blue-100 block py-1" onClick={() => setMobileMenuOpen(false)}>Enhanced Services</Link>
-                  <Link to="/training-resources" className="text-white hover:text-blue-100 block py-1" onClick={() => setMobileMenuOpen(false)}>Training Resources</Link>
-                  <Link to="/emergency-features" className="text-white hover:text-blue-100 block py-1" onClick={() => setMobileMenuOpen(false)}>Emergency Features</Link>
-                  <Link to="/pet-adoption" className="text-white hover:text-blue-100 block py-1" onClick={() => setMobileMenuOpen(false)}>Pet Adoption</Link>
+              {/* Mobile menu, show/hide based on menu state. */}
+              {isMenuOpen && (
+                <div className="md:hidden" id="mobile-menu">
+                  <div className={`px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-blue-400 transform transition-all duration-300 ease-in-out ${isMenuOpen ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'}`}>
+                    <div className="space-y-2">
+                      <Link 
+                        to="/" 
+                        className="text-white hover:text-blue-100 block px-3 py-2 rounded-md text-base font-medium flex items-center gap-2"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        <Home className="h-5 w-5" />
+                        <span>Home</span>
+                      </Link>
+                      <Link 
+                        to="/pet-food" 
+                        className="text-white hover:text-blue-100 block px-3 py-2 rounded-md text-base font-medium"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        Pet Food
+                      </Link>
+                      <Link 
+                        to="/pet-accessories" 
+                        className="text-white hover:text-blue-100 block px-3 py-2 rounded-md text-base font-medium"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        Pet Accessories
+                      </Link>
+                      <div className="text-white px-3 py-2">
+                        <button
+                          onClick={() => setIsServicesOpen(!isServicesOpen)}
+                          className="flex items-center justify-between w-full text-left font-medium transition-colors duration-200 hover:text-blue-200"
+                        >
+                          <span>Services</span>
+                          <span className={`transition-transform duration-300 ${isServicesOpen ? 'rotate-180' : ''}`}>
+                            ▼
+                          </span>
+                        </button>
+                        <div className={`pl-4 space-y-2 mt-2 ${isServicesOpen ? 'block' : 'hidden'}`}>
+                          <Link to="/services" className="text-white hover:text-blue-100 block py-1 font-semibold" onClick={() => setIsMenuOpen(false)}>All Services</Link>
+                          <Link to="/pet-training" className="text-white hover:text-blue-100 block py-1" onClick={() => setIsMenuOpen(false)}>Pet Training</Link>
+                          <Link to="/veterinary-referrals" className="text-white hover:text-blue-100 block py-1" onClick={() => setIsMenuOpen(false)}>Veterinary Referrals</Link>
+                          <Link to="/grooming-services" className="text-white hover:text-blue-100 block py-1" onClick={() => setIsMenuOpen(false)}>Grooming Services</Link>
+                          <Link to="/enhanced-services" className="text-white hover:text-blue-100 block py-1" onClick={() => setIsMenuOpen(false)}>Enhanced Services</Link>
+                          <Link to="/training-resources" className="text-white hover:text-blue-100 block py-1" onClick={() => setIsMenuOpen(false)}>Training Resources</Link>
+                          <Link to="/emergency-features" className="text-white hover:text-blue-100 block py-1" onClick={() => setIsMenuOpen(false)}>Emergency Features</Link>
+                          <Link to="/pet-adoption" className="text-white hover:text-blue-100 block py-1" onClick={() => setIsMenuOpen(false)}>Pet Adoption</Link>
+                        </div>
+                      </div>
+                      <Link 
+                        to="/about" 
+                        className="text-white hover:text-blue-100 block px-3 py-2 rounded-md text-base font-medium"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        About
+                      </Link>
+                      <Link 
+                        to="/cart-checkout" 
+                        className="text-white hover:text-blue-100 block px-3 py-2 rounded-md text-base font-medium flex items-center gap-2"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        <ShoppingCart className="h-6 w-6" />
+                        <span>Cart</span>
+                      </Link>
+                      {user?.role === 'admin' && (
+                        <Link 
+                          to="/admin" 
+                          className="text-white hover:text-blue-100 block px-3 py-2 rounded-md text-base font-medium"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          Admin Panel
+                        </Link>
+                      )}
+                      <button 
+                        onClick={() => {
+                          logout();
+                          setIsMenuOpen(false);
+                        }}
+                        className="text-white hover:text-blue-100 block w-full text-left px-3 py-2 rounded-md text-base font-medium flex items-center gap-2 mt-2 border-t border-blue-400 pt-4"
+                      >
+                        <LogOut className="h-5 w-5" />
+                        <span>Logout</span>
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <Link 
-                to="/about" 
-                className="text-white hover:text-blue-100 block px-3 py-2 rounded-md text-base font-medium"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                About
-              </Link>
-              <Link 
-                to="/cart-checkout" 
-                className="text-white hover:text-blue-100 block px-3 py-2 rounded-md text-base font-medium flex items-center gap-2"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <ShoppingCart className="h-6 w-6" />
-                <span>Cart</span>
-              </Link>
-
-              {/* Logout button in mobile menu */}
-              <button 
-                onClick={() => {
-                  logout();
-                  setMobileMenuOpen(false);
-                }}
-                className="text-white hover:text-blue-100 block w-full text-left px-3 py-2 rounded-md text-base font-medium flex items-center gap-2 mt-2 border-t border-blue-400 pt-4"
-              >
-                <LogOut className="h-5 w-5" />
-                <span>Logout</span>
-              </button>
-
-              {user?.role === 'admin' && (
-                <Link 
-                  to="/admin" 
-                  className="text-white hover:text-blue-100 block px-3 py-2 rounded-md text-base font-medium"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Admin Panel
-                </Link>
               )}
-            </div>
-            </div>
-          </div>
-        )}
-      </nav>
+            </nav>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 pt-20">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/pet-food" element={<PetFoodPage />} />
-          <Route path="/pet-accessories" element={<PetAccessoriesPage />} />
-          <Route path="/cart-checkout" element={<CartCheckoutPage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/services" element={<ServicesPage />} />
-          <Route path="/pet-training" element={<PetTrainingPage />} />
-          <Route path="/pet-adoption" element={<PetAdoptionPage />} />
-          <Route path="/grooming-services" element={<GroomingServicesPage />} />
-          <Route path="/veterinary-referrals" element={<VeterinaryReferralsPage />} />
-          <Route path="/checkout/:id" element={<CheckoutPage pets={pets} />} />
-          <Route path="/adopt" element={<PetList pets={pets} />} />
-          <Route path="/adopt/:id" element={<AdoptPage pets={pets} />} />
-          <Route path="/enhanced-services" element={<EnhancedServicesPage />} />
-          <Route path="/training-resources" element={<PetTrainingResourcesPage />} />
-          <Route path="/emergency-features" element={<EmergencyFeaturesPage />} />
-          <Route path="/admin" element={<AdminPanel />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </main>
-      
-      {/* Footer */}
-      <Footer />
-            </div>
-          </Suspense>
-        </CartProvider>
-      </Router>
+            <main className="container mx-auto px-4 py-8">
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/pet-food" element={<PetFoodPage />} />
+                <Route path="/pet-accessories" element={<PetAccessoriesPage />} />
+                <Route path="/services" element={<ServicesPage />} />
+                <Route path="/pet-training" element={<PetTrainingPage />} />
+                <Route path="/veterinary-referrals" element={<VeterinaryReferralsPage />} />
+                <Route path="/grooming-services" element={<GroomingServicesPage />} />
+                <Route path="/enhanced-services" element={<EnhancedServicesPage />} />
+                <Route path="/training-resources" element={<PetTrainingResourcesPage />} />
+                <Route path="/emergency-features" element={<EmergencyFeaturesPage />} />
+                <Route path="/pet-adoption" element={<PetAdoptionPage />} />
+                <Route path="/adopt" element={<PetList pets={pets} />} />
+                <Route path="/adopt/:id" element={<AdoptPage pets={pets} />} />
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/cart-checkout" element={<CartCheckoutPage />} />
+                <Route path="/checkout" element={<CheckoutPage pets={pets} />} />
+                {user?.role === 'admin' && <Route path="/admin" element={<AdminPanel />} />}
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </main>
+
+            <Footer />
+            <ToastContainer position="bottom-right" />
+          </div>
+        </Suspense>
+      </CartProvider>
     </ErrorBoundary>
   );
-}
+};
 
-export default function AppWithAuth() {
-  return (
-    <AuthProvider>
-      <App />
-    </AuthProvider>
-  );
-}
+export default App;

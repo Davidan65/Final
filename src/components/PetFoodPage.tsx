@@ -38,7 +38,12 @@ export const PetFoodPage: React.FC = () => {
 
   useEffect(() => {
     fetchPetFoods();
+    scrollToTop();
   }, []);
+
+  useEffect(() => {
+    scrollToTop();
+  }, [currentPage]);
 
   const fetchPetFoods = async () => {
     try {
