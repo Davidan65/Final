@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { useAuth } from '../contexts/AuthContext';
 import { Calendar, Clock, MapPin, Phone, Mail } from 'lucide-react';
 
 export const EnhancedServicesPage: React.FC = () => {

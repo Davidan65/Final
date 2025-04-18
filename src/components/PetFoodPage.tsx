@@ -1,17 +1,27 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { useCart } from '../contexts/CartContext';
+import { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { Filter, Star, ShoppingBag, Shield, Heart, Plus, Edit, Trash2, ShoppingCart, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useCart } from '../contexts/CartContext';
+import { Filter, Star, ShoppingBag, Shield, Heart, Plus, Edit, Trash2 } from 'lucide-react';
 
-type PetFood = {
+interface PetFood {
   id: number;
   name: string;
   description: string;
   price: number;
   image: string;
   category: string;
+  rating: number;
+  reviews: number;
+  brand: string;
   weight: string;
-};
+  ingredients: string[];
+  nutritionalInfo: {
+    protein: string;
+    fat: string;
+    fiber: string;
+    moisture: string;
+  };
+}
 
 const scrollToTop = () => {
   window.scrollTo(0, 0);

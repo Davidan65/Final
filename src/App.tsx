@@ -417,12 +417,11 @@ const pets: Pet[] = [
 
 const App = () => {
   const { user, logout } = useAuth();
-  const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isServicesOpen, setIsServicesOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedType, setSelectedType] = useState('');
+  const [searchTerm] = useState('');
+  const [selectedType] = useState('');
 
   // Reset page when filters change
   useEffect(() => {
@@ -441,18 +440,6 @@ const App = () => {
   const indexOfLastPet = currentPage * petsPerPage;
   const indexOfFirstPet = indexOfLastPet - petsPerPage;
   const currentPets = filteredPets.slice(indexOfFirstPet, indexOfLastPet);
-
-
-  // Pet type icon component for future use
-  const PetTypeIcon = ({ type }: { type: string }) => {
-    switch (type) {
-      case "Dog": return <Dog className="w-6 h-6" />;
-      case "Cat": return <Cat className="w-6 h-6" />;
-      case "Bird": return <Bird className="w-6 h-6" />;
-      case "Fish": return <Fish className="w-6 h-6" />;
-      default: return null;
-    }
-  };
 
   // If user is not authenticated, only render the auth pages
   if (!user) {

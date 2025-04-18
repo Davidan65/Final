@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingCart, Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
@@ -8,14 +8,16 @@ const scrollToTop = () => {
   window.scrollTo(0, 0);
 };
 
-type Accessory = {
+interface Accessory {
   id: number;
   name: string;
   description: string;
   price: number;
   image: string;
   category: string;
-};
+  rating: number;
+  reviews: number;
+}
 
 export const PetAccessoriesPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');

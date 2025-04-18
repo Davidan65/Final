@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Facebook, Instagram, Mail, Phone, MapPin, Clock } from 'lucide-react';
-import NewsletterSubscription from './NewsletterSubscription';
 
 export const Footer: React.FC = () => {
   const scrollToTop = () => {
