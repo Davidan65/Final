@@ -1,4 +1,4 @@
-import { useState, useEffect, Suspense } from 'react';
+import { useState, Suspense } from 'react';
 import { ShoppingCart, Home, Menu, X, LogOut, ChevronDown } from 'lucide-react';
 import { PetAccessoriesPage } from './components/PetAccessoriesPage';
 import { Routes, Route, Link, Navigate } from 'react-router-dom';
