@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Calendar, Clock, MapPin, Phone, Mail } from 'lucide-react';
 
 export const EnhancedServicesPage: React.FC = () => {
     const [selectedService, setSelectedService] = useState<string>('');

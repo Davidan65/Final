@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo } from 'react';
-import { ShoppingCart, Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
 

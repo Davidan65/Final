@@ -419,23 +419,8 @@ const App = () => {
   const { user, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isServicesOpen, setIsServicesOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm] = useState('');
   const [selectedType] = useState('');
-
-  // Reset page when filters change
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm, selectedType]);
-
-  const petsPerPage = 8;
-
-  const filteredPets = pets.filter(pet => {
-    const matchesSearch = pet.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         pet.breed.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesType = !selectedType || pet.type === selectedType;
-    return matchesSearch && matchesType;
-  });
 
   // If user is not authenticated, only render the auth pages
   if (!user) {
