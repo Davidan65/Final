@@ -11,6 +11,7 @@ import petFoodRoutes from './routes/petFood.js';
 import authRoutes from './routes/auth.js';
 import PetFood from './models/PetFood.js';
 import PetAccessory from './models/PetAccessory.js';
+import User from './models/User.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -143,15 +144,6 @@ mongoose.connection.on('disconnected', () => {
 mongoose.connection.on('error', (err) => {
   console.error('MongoDB connection error:', err);
 });
-
-// User Schema
-const userSchema = new mongoose.Schema({
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  role: { type: String, enum: ['user', 'admin'], default: 'user' }
-});
-
-const User = mongoose.model('User', userSchema);
 
 // Add error handling middleware
 app.use((err, req, res, next) => {
