@@ -18,3 +18,12 @@ services:
         value: mongodb+srv://dave880:15935708@cluster0.ucau26i.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
       - key: JWT_SECRET
         value: mysdfgvfd45664332rtyhrde345532
+
+  - type: web
+    name: frontend
+    buildCommand: npm install && npm run build:prod
+    staticPublishPath: ./dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
