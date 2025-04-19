@@ -46,26 +46,66 @@ if (!process.env.JWT_SECRET) {
   process.exit(1);
 }
 
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  serverSelectionTimeoutMS: 5000,
-  socketTimeoutMS: 45000,
-})
-.then(async () => {
-  console.log('Successfully connected to MongoDB.');
-  
-  // Verify PetFood model
+const connectWithRetry = async () => {
   try {
-    const foods = await PetFood.find({});
-    console.log('Initial PetFood collection check:', foods);
+    await mongoose.connect(process.env.MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+    });
+    console.log('Successfully connected to MongoDB.');
+    
+    // Initialize sample data if collection is empty
+    try {
+      const foods = await PetFood.find({});
+      console.log('Current PetFood collection count:', foods.length);
+      
+      if (foods.length === 0) {
+        console.log('Initializing sample pet food data...');
+        const sampleFoods = [
+          {
+            name: 'Premium Dog Food',
+            description: 'High-quality dog food with real meat and vegetables',
+            price: 29.99,
+            image: 'https://images.unsplash.com/photo-1583511655826-05700442b31b?auto=format&fit=crop&q=80&w=300&h=200',
+            category: 'Dog',
+            weight: '5kg'
+          },
+          {
+            name: 'Grain-Free Cat Food',
+            description: 'Natural cat food with no artificial additives',
+            price: 24.99,
+            image: 'https://images.unsplash.com/photo-1583511655826-05700442b31b?auto=format&fit=crop&q=80&w=300&h=200',
+            category: 'Cat',
+            weight: '3kg'
+          }
+        ];
+        
+        await PetFood.insertMany(sampleFoods);
+        console.log('Sample pet food data initialized');
+      }
+    } catch (err) {
+      console.error('Error checking/initializing PetFood collection:', err);
+    }
   } catch (err) {
-    console.error('Error checking PetFood collection:', err);
+    console.error('MongoDB connection error:', err);
+    console.log('Retrying connection in 5 seconds...');
+    setTimeout(connectWithRetry, 5000);
   }
-})
-.catch((err) => {
+};
+
+// Initial connection
+connectWithRetry();
+
+// Handle connection events
+mongoose.connection.on('disconnected', () => {
+  console.log('MongoDB disconnected, attempting to reconnect...');
+  connectWithRetry();
+});
+
+mongoose.connection.on('error', (err) => {
   console.error('MongoDB connection error:', err);
-  process.exit(1);
 });
 
 // User Schema
