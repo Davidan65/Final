@@ -9,6 +9,7 @@ import dotenv from 'dotenv';
 import petAccessoriesRoutes from './routes/petAccessories.js';
 import petFoodRoutes from './routes/petFood.js';
 import PetFood from './models/PetFood.js';
+import PetAccessory from './models/PetAccessory.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -56,8 +57,9 @@ const connectWithRetry = async () => {
     });
     console.log('Successfully connected to MongoDB.');
     
-    // Initialize sample data if collection is empty
+    // Initialize sample data if collections are empty
     try {
+      // Check and initialize PetFood collection
       const foods = await PetFood.find({});
       console.log('Current PetFood collection count:', foods.length);
       
@@ -85,8 +87,41 @@ const connectWithRetry = async () => {
         await PetFood.insertMany(sampleFoods);
         console.log('Sample pet food data initialized');
       }
+
+      // Check and initialize PetAccessory collection
+      const accessories = await PetAccessory.find({});
+      console.log('Current PetAccessory collection count:', accessories.length);
+      
+      if (accessories.length === 0) {
+        console.log('Initializing sample pet accessory data...');
+        const sampleAccessories = [
+          {
+            name: 'Luxury Dog Collar',
+            description: 'Premium leather collar with brass hardware',
+            price: 29.99,
+            image: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&q=80&w=500',
+            category: 'Collars & Leashes',
+            material: 'Leather',
+            size: 'Medium',
+            color: 'Brown'
+          },
+          {
+            name: 'Cozy Pet Bed',
+            description: 'Soft, washable bed with orthopedic foam',
+            price: 49.99,
+            image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&q=80&w=500',
+            category: 'Beds & Furniture',
+            material: 'Polyester',
+            size: 'Large',
+            color: 'Gray'
+          }
+        ];
+        
+        await PetAccessory.insertMany(sampleAccessories);
+        console.log('Sample pet accessory data initialized');
+      }
     } catch (err) {
-      console.error('Error checking/initializing PetFood collection:', err);
+      console.error('Error checking/initializing collections:', err);
     }
   } catch (err) {
     console.error('MongoDB connection error:', err);
