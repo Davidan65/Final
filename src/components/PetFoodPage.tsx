@@ -4,22 +4,19 @@ import { useCart } from '../contexts/CartContext';
 import { Filter, Star, ShoppingBag, Shield, Heart, Plus, Edit, Trash2 } from 'lucide-react';
 
 interface PetFood {
-  id: number;
+  _id: string;
   name: string;
   description: string;
   price: number;
   image: string;
   category: string;
-  rating: number;
-  reviews: number;
   brand: string;
   weight: string;
-  ingredients: string[];
-  nutritionalInfo: {
+  ingredients?: string[];
+  nutritionalInfo?: {
     protein: string;
     fat: string;
     fiber: string;
-    moisture: string;
   };
 }
 
@@ -31,7 +28,7 @@ export const PetFoodPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const { addItem, items } = useCart();
+  const { addItem, items, removeItem } = useCart();
   const { user } = useAuth();
   const [petFoods, setPetFoods] = useState<PetFood[]>([]);
   const [isAdding, setIsAdding] = useState(false);
@@ -82,7 +79,7 @@ export const PetFoodPage: React.FC = () => {
       const token = localStorage.getItem('token');
       const API_URL = 'https://final-2-1yn4.onrender.com';
       const url = editingFood 
-        ? `${API_URL}/api/pet-food/${editingFood.id}`
+        ? `${API_URL}/api/pet-food/${editingFood._id}`
         : `${API_URL}/api/pet-food`;
       
       const response = await fetch(url, {
@@ -112,7 +109,7 @@ export const PetFoodPage: React.FC = () => {
     }
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     if (!window.confirm('Are you sure you want to delete this item?')) return;
     
     try {
@@ -161,12 +158,16 @@ export const PetFoodPage: React.FC = () => {
 
   const totalPages = Math.ceil(filteredPetFoods.length / itemsPerPage);
 
-  const isItemInCart = (id: number) => {
+  const isItemInCart = (id: string) => {
     return items.some(item => item.id === id);
   };
 
   const handleAddToCart = (food: PetFood) => {
-    addItem(food.id, food.name, food.price);
+    if (isItemInCart(food._id)) {
+      removeItem(food._id);
+    } else {
+      addItem(food._id, food.name, food.price);
+    }
   };
 
   // Get unique categories
@@ -337,7 +338,7 @@ export const PetFoodPage: React.FC = () => {
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
         {currentPetFoods.map((food) => (
-          <div key={food.id} className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full">
+          <div key={food._id} className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full">
             <div className="relative h-48">
               <img
                 src={food.image}
@@ -356,7 +357,7 @@ export const PetFoodPage: React.FC = () => {
                     <Edit className="w-4 h-4" />
                   </button>
                   <button
-                    onClick={() => handleDelete(food.id)}
+                    onClick={() => handleDelete(food._id)}
                     className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -375,7 +376,7 @@ export const PetFoodPage: React.FC = () => {
                   onClick={() => handleAddToCart(food)}
                   className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors"
                 >
-                  {isItemInCart(food.id) ? 'Remove from Cart' : 'Add to Cart'}
+                  {isItemInCart(food._id) ? 'Remove from Cart' : 'Add to Cart'}
                 </button>
               </div>
             </div>
