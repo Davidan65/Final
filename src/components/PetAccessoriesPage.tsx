@@ -394,12 +394,12 @@ export const PetAccessoriesPage: React.FC = () => {
               <h3 className="text-xl font-semibold mb-2">{accessory.name}</h3>
               <div className="flex-grow">
                 <p className="text-gray-600 mb-2 line-clamp-3">{accessory.description}</p>
-                <p className="text-lg font-bold text-primary mb-2">${accessory.price.toFixed(2)}</p>
+                <p className="text-lg font-bold text-blue-600 mb-2">${accessory.price.toFixed(2)}</p>
               </div>
               <div className="mt-auto">
                 <button
                   onClick={() => handleAddToCart(accessory)}
-                  className="w-full bg-primary text-white py-2 px-4 rounded hover:bg-primary/90 transition-colors"
+                  className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors"
                 >
                   {isItemInCart(accessory._id) ? 'Remove from Cart' : 'Add to Cart'}
                 </button>
