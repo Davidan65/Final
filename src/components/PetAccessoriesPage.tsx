@@ -27,7 +27,7 @@ export const PetAccessoriesPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const { addItem, items, removeItem } = useCart();
-  const { isAuthenticated, user } = useAuth();
+  const { user } = useAuth();
   const [accessories, setAccessories] = useState<Accessory[]>([]);
   const [isAdding, setIsAdding] = useState(false);
   const [editingAccessory, setEditingAccessory] = useState<Accessory | null>(null);
@@ -373,6 +373,22 @@ export const PetAccessoriesPage: React.FC = () => {
                   e.currentTarget.src = 'https://images.unsplash.com/photo-1583511655826-05700442b31b?auto=format&fit=crop&q=80&w=300&h=200';
                 }}
               />
+              {user?.role === 'admin' && (
+                <div className="absolute top-2 right-2 flex gap-2">
+                  <button
+                    onClick={() => handleEdit(accessory)}
+                    className="p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600"
+                  >
+                    <Edit className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(accessory._id)}
+                    className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
             </div>
             <div className="p-4 flex flex-col flex-grow">
               <h3 className="text-xl font-semibold mb-2">{accessory.name}</h3>

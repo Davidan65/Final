@@ -32,7 +32,7 @@ export const PetFoodPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const { addItem, items } = useCart();
-  const { isAuthenticated, user } = useAuth();
+  const { user } = useAuth();
   const [petFoods, setPetFoods] = useState<PetFood[]>([]);
   const [isAdding, setIsAdding] = useState(false);
   const [editingFood, setEditingFood] = useState<PetFood | null>(null);
