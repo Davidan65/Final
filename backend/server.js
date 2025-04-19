@@ -265,6 +265,19 @@ app.use('/api/accessories', petAccessoriesRoutes);
 app.use('/api/pet-food', petFoodRoutes);
 console.log('Routes registered successfully');
 
+// Serve static files from the React app
+app.use(express.static(join(__dirname, '../dist')));
+
+// API Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/accessories', petAccessoriesRoutes);
+app.use('/api/pet-food', petFoodRoutes);
+
+// Catch-all route to handle client-side routing
+app.get('*', (req, res) => {
+  res.sendFile(join(__dirname, '../dist/index.html'));
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
