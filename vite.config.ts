@@ -5,13 +5,23 @@ import path from 'path';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/', // Remove /pet-store/ since we're deploying to root
+  base: '/',
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
   server: {
-    host: true, // Expose to all network interfaces
-    historyApiFallback: true,
+    host: true,
+  },
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+        },
+      },
+    },
   },
   resolve: {
     alias: {

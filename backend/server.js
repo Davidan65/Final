@@ -266,7 +266,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/accessories', petAccessoriesRoutes);
 app.use('/api/pet-food', petFoodRoutes);
 
-// Catch-all route to handle client-side routing
+// Serve index.html for all other routes
 app.get('*', (req, res) => {
   res.sendFile(join(__dirname, '../dist/index.html'));
 });
