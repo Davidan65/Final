@@ -57,7 +57,15 @@ export const PetFoodPage: React.FC = () => {
 
   const fetchPetFoods = async () => {
     try {
-      const response = await fetch('https://pet-adoption-backend.onrender.com/api/pet-food');
+      const API_URL = 'https://final-2-1yn4.onrender.com';
+      console.log('Fetching pet foods from:', `${API_URL}/api/pet-food`);
+      const response = await fetch(`${API_URL}/api/pet-food`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      });
       if (!response.ok) {
         throw new Error('Failed to fetch pet food');
       }
@@ -72,9 +80,10 @@ export const PetFoodPage: React.FC = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
+      const API_URL = 'https://final-2-1yn4.onrender.com';
       const url = editingFood 
-        ? `https://pet-adoption-backend.onrender.com/api/pet-food/${editingFood.id}`
-        : 'https://pet-adoption-backend.onrender.com/api/pet-food';
+        ? `${API_URL}/api/pet-food/${editingFood.id}`
+        : `${API_URL}/api/pet-food`;
       
       const response = await fetch(url, {
         method: editingFood ? 'PUT' : 'POST',
@@ -108,7 +117,8 @@ export const PetFoodPage: React.FC = () => {
     
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`https://pet-adoption-backend.onrender.com/api/pet-food/${id}`, {
+      const API_URL = 'https://final-2-1yn4.onrender.com';
+      const response = await fetch(`${API_URL}/api/pet-food/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`

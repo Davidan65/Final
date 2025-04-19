@@ -23,7 +23,9 @@ app.use(cors({
   origin: ['https://frondend-tl1w.onrender.com', 'http://localhost:5173'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true,
-  allowedHeaders: ['Content-Type', 'Authorization', 'Accept']
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
+  exposedHeaders: ['Content-Length', 'Authorization'],
+  maxAge: 86400 // 24 hours
 }));
 app.use(express.json());
 
