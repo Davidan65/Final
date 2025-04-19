@@ -165,18 +165,14 @@ export const PetAccessoriesPage: React.FC = () => {
   const totalPages = Math.ceil(filteredAccessories.length / itemsPerPage);
 
   const isItemInCart = (id: string) => {
-    // Convert string ID to number for comparison
-    const numericId = parseInt(id);
-    return items.some(item => item.id === numericId);
+    return items.some(item => item.id === id);
   };
 
   const handleAddToCart = (accessory: Accessory) => {
-    // Convert string ID to number for cart operations
-    const numericId = parseInt(accessory._id);
     if (isItemInCart(accessory._id)) {
-      removeItem(numericId);
+      removeItem(accessory._id);
     } else {
-      addItem(numericId, accessory.name, accessory.price);
+      addItem(accessory._id, accessory.name, accessory.price);
     }
   };
 
