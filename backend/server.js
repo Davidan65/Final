@@ -8,6 +8,7 @@ import { dirname, join } from 'path';
 import dotenv from 'dotenv';
 import petAccessoriesRoutes from './routes/petAccessories.js';
 import petFoodRoutes from './routes/petFood.js';
+import authRoutes from './routes/auth.js';
 import PetFood from './models/PetFood.js';
 import PetAccessory from './models/PetAccessory.js';
 
