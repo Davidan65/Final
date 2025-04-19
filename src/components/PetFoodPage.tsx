@@ -335,17 +335,16 @@ export const PetFoodPage: React.FC = () => {
         </div>
       )}
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 px-4 sm:px-6">
-        {currentPetFoods.map(food => (
-          <div key={food.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-            <div className="relative">
-              <img 
-                src={food.image} 
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+        {currentPetFoods.map((food) => (
+          <div key={food.id} className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full">
+            <div className="relative h-48">
+              <img
+                src={food.image}
                 alt={food.name}
-                className="w-full h-48 sm:h-56 object-cover"
+                className="w-full h-full object-cover"
                 onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = 'https://images.unsplash.com/photo-1583511655826-05700442b31b?auto=format&fit=crop&q=80&w=300&h=200';
+                  e.currentTarget.src = 'https://images.unsplash.com/photo-1583511655826-05700442b31b?auto=format&fit=crop&q=80&w=300&h=200';
                 }}
               />
               {user?.role === 'admin' && (
@@ -365,30 +364,18 @@ export const PetFoodPage: React.FC = () => {
                 </div>
               )}
             </div>
-            <div className="p-4">
-              <div className="flex justify-between items-start mb-2">
-                <h2 className="text-lg sm:text-xl font-semibold text-gray-900">{food.name}</h2>
+            <div className="p-4 flex flex-col flex-grow">
+              <h3 className="text-xl font-semibold mb-2">{food.name}</h3>
+              <div className="flex-grow">
+                <p className="text-gray-600 mb-2 line-clamp-3">{food.description}</p>
+                <p className="text-lg font-bold text-primary mb-2">${food.price.toFixed(2)}</p>
               </div>
-              <p className="text-sm sm:text-base text-gray-600 mb-2">{food.description}</p>
-              <div className="text-sm text-gray-500 mb-4">
-                <p>Weight: {food.weight}</p>
-              </div>
-              <div className="flex flex-col items-start gap-3 relative">
-                <span className="text-xl sm:text-2xl font-bold text-blue-600">${food.price.toFixed(2)}</span>
-                <button 
+              <div className="mt-auto">
+                <button
                   onClick={() => handleAddToCart(food)}
-                  disabled={!isAuthenticated || isItemInCart(food.id)}
-                  className={`w-32 px-3 sm:px-4 py-2 rounded-lg ${
-                    !isAuthenticated || isItemInCart(food.id)
-                      ? 'bg-gray-300 cursor-not-allowed'
-                      : 'bg-blue-500 text-white hover:bg-blue-600'
-                  }`}
+                  className="w-full bg-primary text-white py-2 px-4 rounded hover:bg-primary/90 transition-colors"
                 >
-                  {!isAuthenticated
-                    ? 'Login to Add'
-                    : isItemInCart(food.id)
-                    ? 'Added to Cart'
-                    : 'Add to Cart'}
+                  {isItemInCart(food.id) ? 'Remove from Cart' : 'Add to Cart'}
                 </button>
               </div>
             </div>
