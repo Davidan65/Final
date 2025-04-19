@@ -186,7 +186,7 @@ export const PetAccessoriesPage: React.FC = () => {
                         className="w-full h-48 sm:h-56 object-cover"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
-                          target.src = 'https://via.placeholder.com/300x200?text=No+Image';
+                          target.src = 'https://images.unsplash.com/photo-1583511655826-05700442b31b?auto=format&fit=crop&q=80&w=300&h=200';
                         }}
                       />
                       <div className="p-4">
