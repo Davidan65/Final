@@ -33,6 +33,7 @@ export const PetAccessoriesPage: React.FC = () => {
       try {
         console.log('Fetching accessories from:', 'https://pet-adoption-backend.onrender.com/api/accessories');
         const response = await fetch('https://pet-adoption-backend.onrender.com/api/accessories', {
+          method: 'GET',
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
