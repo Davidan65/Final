@@ -20,38 +20,9 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: function(origin, callback) {
-    const allowedOrigins = [
-      'https://final-frontend.onrender.com',
-      'http://localhost:5173',
-      'http://localhost:5174',
-      'http://localhost:5002',
-      'http://127.0.0.1:65009',
-      'https://final-2-1yn4.onrender.com',
-      'https://final-frontend-2.onrender.com',
-      'https://final-frontend-2.onrender.com',
-      'https://final-2-1yn4.onrender.com',
-      'https://frondend-tl1w.onrender.com'
-    ];
-    
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) {
-      console.log('Request with no origin allowed');
-      return callback(null, true);
-    }
-    
-    if (allowedOrigins.includes(origin)) {
-      console.log('Allowed origin:', origin);
-      return callback(null, true);
-    }
-    
-    console.log('Blocked origin:', origin);
-    return callback(new Error(`Origin ${origin} not allowed by CORS`));
-  },
-  optionsSuccessStatus: 200,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  credentials: true,
-  allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With']
+  origin: ['https://frondend-tl1w.onrender.com', 'http://localhost:5173'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
 }));
 app.use(express.json());
 
