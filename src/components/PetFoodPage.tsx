@@ -55,6 +55,8 @@ export const PetFoodPage: React.FC = () => {
     const loadPetFoods = async () => {
       try {
         const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+        console.log('Fetching pet foods from:', API_URL); // Debug log
+        
         const response = await fetch(`${API_URL}/api/pet-food`, {
           method: 'GET',
           headers: {
@@ -65,10 +67,17 @@ export const PetFoodPage: React.FC = () => {
         });
 
         if (!response.ok) {
-          throw new Error(`Failed to fetch pet food: ${response.status} ${response.statusText}`);
+          const errorText = await response.text();
+          throw new Error(`Failed to fetch pet food: ${response.status} ${response.statusText}\n${errorText}`);
         }
 
         const data = await response.json();
+        
+        // Validate the data structure
+        if (!Array.isArray(data)) {
+          throw new Error('Invalid response format: expected an array of pet foods');
+        }
+
         if (mounted) {
           setPetFoods(data);
           setIsLoading(false);

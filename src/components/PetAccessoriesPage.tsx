@@ -431,7 +431,7 @@ export const PetAccessoriesPage: React.FC = () => {
             </div>
             </div>
           ))}
-      </div>
+        </div>
       )}
       {totalPages > 1 && (
         <div className="mt-8 flex justify-center gap-4">
@@ -458,7 +458,7 @@ export const PetAccessoriesPage: React.FC = () => {
           >
             Next
           </button>
-        </div>
+      </div>
       )}
     </div>
   );
