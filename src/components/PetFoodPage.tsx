@@ -427,10 +427,11 @@ export const PetFoodPage: React.FC = () => {
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
-                    target.src = 'https://placehold.co/300x200?text=Pet+Food';
+                    target.src = 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=300&h=200';
                     target.onerror = null;
                   }}
                   crossOrigin="anonymous"
+                  loading="lazy"
                 />
                 {user?.role === 'admin' && (
                   <div className="absolute top-2 right-2 flex gap-2">
