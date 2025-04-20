@@ -50,8 +50,22 @@ export const PetFoodPage: React.FC = () => {
   const itemsPerPage = 8;
 
   useEffect(() => {
-    fetchPetFoods();
+    let mounted = true;
+
+    const loadPetFoods = async () => {
+      try {
+        await fetchPetFoods();
+      } catch (error) {
+        console.error('Error loading pet foods:', error);
+      }
+    };
+
+    loadPetFoods();
     scrollToTop();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   useEffect(() => {
@@ -62,21 +76,24 @@ export const PetFoodPage: React.FC = () => {
     setIsLoading(true);
     try {
       const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-      console.log('Fetching pet foods from:', `${API_URL}/api/pet-food`);
       const response = await fetch(`${API_URL}/api/pet-food`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
-        }
+        },
+        credentials: 'include'
       });
+
       if (!response.ok) {
         throw new Error(`Failed to fetch pet food: ${response.status} ${response.statusText}`);
       }
+
       const data = await response.json();
       setPetFoods(data);
     } catch (error) {
       console.error('Error fetching pet food:', error);
+      setPetFoods([]);
     } finally {
       setIsLoading(false);
     }
