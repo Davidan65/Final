@@ -54,8 +54,8 @@ export const PetFoodPage: React.FC = () => {
 
     const loadPetFoods = async () => {
       try {
-        const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-        console.log('Fetching pet foods from:', API_URL); // Debug log
+        const API_URL = 'https://final-2-1yn4.onrender.com';
+        console.log('Fetching pet foods from:', API_URL);
         
         const response = await fetch(`${API_URL}/api/pet-food`, {
           method: 'GET',
@@ -63,7 +63,8 @@ export const PetFoodPage: React.FC = () => {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
           },
-          credentials: 'include'
+          credentials: 'include',
+          mode: 'cors'
         });
 
         if (!response.ok) {
@@ -73,7 +74,6 @@ export const PetFoodPage: React.FC = () => {
 
         const data = await response.json();
         
-        // Validate the data structure
         if (!Array.isArray(data)) {
           throw new Error('Invalid response format: expected an array of pet foods');
         }
@@ -108,7 +108,7 @@ export const PetFoodPage: React.FC = () => {
     setIsSaving(true);
     try {
       const token = localStorage.getItem('token');
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const API_URL = 'https://final-2-1yn4.onrender.com';
       const url = editingFood 
         ? `${API_URL}/api/pet-food/${editingFood.id}`
         : `${API_URL}/api/pet-food`;
@@ -164,7 +164,7 @@ export const PetFoodPage: React.FC = () => {
     
     try {
       const token = localStorage.getItem('token');
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const API_URL = 'https://final-2-1yn4.onrender.com';
       const response = await fetch(`${API_URL}/api/pet-food/${id}`, {
         method: 'DELETE',
         headers: {
