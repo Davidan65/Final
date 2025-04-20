@@ -5,7 +5,7 @@ import { Filter, Star, ShoppingBag, Shield, Heart, Plus, Edit, Trash2 } from 'lu
 import { Spinner } from './Spinner';
 
 interface PetFood {
-  id: number;
+  _id: string;
   name: string;
   description: string;
   price: number;
@@ -110,7 +110,7 @@ export const PetFoodPage: React.FC = () => {
       const token = localStorage.getItem('token');
       const API_URL = 'https://final-2-1yn4.onrender.com';
       const url = editingFood 
-        ? `${API_URL}/api/pet-food/${editingFood.id}`
+        ? `${API_URL}/api/pet-food/${editingFood._id}`
         : `${API_URL}/api/pet-food`;
       
       const response = await fetch(url, {
@@ -159,7 +159,7 @@ export const PetFoodPage: React.FC = () => {
     }
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     if (!window.confirm('Are you sure you want to delete this item?')) return;
     
     try {
@@ -221,24 +221,24 @@ export const PetFoodPage: React.FC = () => {
 
   const totalPages = Math.ceil(filteredPetFoods.length / itemsPerPage);
 
-  const isItemInCart = (id: number) => {
+  const isItemInCart = (id: string) => {
     if (!id) return false;
     console.log('Checking if item is in cart:', { id, items });
-    return items.some(item => item.id === id.toString());
+    return items.some(item => item.id === id);
   };
 
   const handleAddToCart = (food: PetFood) => {
-    if (!food || !food.id) {
+    if (!food || !food._id) {
       console.log('Invalid food item:', food);
       return;
     }
     
-    console.log('Adding/removing from cart:', { food, isInCart: isItemInCart(food.id) });
+    console.log('Adding/removing from cart:', { food, isInCart: isItemInCart(food._id) });
     
-    if (isItemInCart(food.id)) {
-      removeItem(food.id.toString());
+    if (isItemInCart(food._id)) {
+      removeItem(food._id);
     } else {
-      addItem(food.id.toString(), food.name, food.price);
+      addItem(food._id, food.name, food.price);
     }
   };
 
@@ -425,7 +425,7 @@ export const PetFoodPage: React.FC = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
           {currentPetFoods.map((food) => (
-            <div key={food.id} className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full">
+            <div key={food._id} className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full">
               <div className="relative h-48">
                 <img
                   src={food.image.startsWith('https://encrypted-tbn') 
@@ -450,7 +450,7 @@ export const PetFoodPage: React.FC = () => {
                       <Edit className="w-4 h-4" />
                     </button>
                     <button
-                      onClick={() => handleDelete(food.id)}
+                      onClick={() => handleDelete(food._id)}
                       className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -469,7 +469,7 @@ export const PetFoodPage: React.FC = () => {
                     onClick={() => handleAddToCart(food)}
                     className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors"
                   >
-                    {isItemInCart(food.id) ? 'Remove from Cart' : 'Add to Cart'}
+                    {isItemInCart(food._id) ? 'Remove from Cart' : 'Add to Cart'}
                   </button>
                 </div>
               </div>
