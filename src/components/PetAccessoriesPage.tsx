@@ -390,12 +390,20 @@ export const PetAccessoriesPage: React.FC = () => {
           <div key={accessory._id} className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full">
             <div className="relative h-48">
               <img
-                src={accessory.image}
+                src={accessory.image.startsWith('https://encrypted-tbn') 
+                  ? `https://images.weserv.nl/?url=${encodeURIComponent(accessory.image)}&w=300&h=200` 
+                  : accessory.image}
                 alt={accessory.name}
                 className="w-full h-full object-cover"
                 onError={(e) => {
-                  e.currentTarget.src = 'https://images.unsplash.com/photo-1583511655826-05700442b31b?auto=format&fit=crop&q=80&w=300&h=200';
+                  const target = e.target as HTMLImageElement;
+                  // Use a more reliable fallback image
+                  target.src = 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=300&h=200';
+                  // Remove the error handler to prevent infinite loops
+                  target.onerror = null;
                 }}
+                crossOrigin="anonymous"
+                loading="lazy"
               />
               {user?.role === 'admin' && (
                 <div className="absolute top-2 right-2 flex gap-2">
