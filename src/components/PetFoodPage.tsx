@@ -222,16 +222,17 @@ export const PetFoodPage: React.FC = () => {
   const totalPages = Math.ceil(filteredPetFoods.length / itemsPerPage);
 
   const isItemInCart = (id: number) => {
-    const stringId = id.toString();
-    return items.some(item => item.id === stringId);
+    if (!id) return false;
+    return items.some(item => item.id === id.toString());
   };
 
   const handleAddToCart = (food: PetFood) => {
-    const stringId = food.id.toString();
+    if (!food || !food.id) return;
+    
     if (isItemInCart(food.id)) {
-      removeItem(stringId);
+      removeItem(food.id.toString());
     } else {
-      addItem(stringId, food.name, food.price);
+      addItem(food.id.toString(), food.name, food.price);
     }
   };
 
