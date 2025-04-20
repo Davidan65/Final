@@ -427,8 +427,8 @@ export const PetFoodPage: React.FC = () => {
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
-                    target.src = 'https://images.unsplash.com/photo-1583511655826-05700442b31b?auto=format&fit=crop&q=80&w=300&h=200';
-                    target.onerror = null; // Prevent infinite loop
+                    target.src = 'https://placehold.co/300x200?text=Pet+Food';
+                    target.onerror = null;
                   }}
                   crossOrigin="anonymous"
                 />
