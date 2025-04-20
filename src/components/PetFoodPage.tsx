@@ -422,7 +422,9 @@ export const PetFoodPage: React.FC = () => {
             <div key={food.id} className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full">
               <div className="relative h-48">
                 <img
-                  src={food.image}
+                  src={food.image.startsWith('https://encrypted-tbn') 
+                    ? `https://images.weserv.nl/?url=${encodeURIComponent(food.image)}&w=300&h=200` 
+                    : food.image}
                   alt={food.name}
                   className="w-full h-full object-cover"
                   onError={(e) => {
