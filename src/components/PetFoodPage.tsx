@@ -426,8 +426,11 @@ export const PetFoodPage: React.FC = () => {
                   alt={food.name}
                   className="w-full h-full object-cover"
                   onError={(e) => {
-                    e.currentTarget.src = 'https://images.unsplash.com/photo-1583511655826-05700442b31b?auto=format&fit=crop&q=80&w=300&h=200';
+                    const target = e.target as HTMLImageElement;
+                    target.src = 'https://images.unsplash.com/photo-1583511655826-05700442b31b?auto=format&fit=crop&q=80&w=300&h=200';
+                    target.onerror = null; // Prevent infinite loop
                   }}
+                  crossOrigin="anonymous"
                 />
                 {user?.role === 'admin' && (
                   <div className="absolute top-2 right-2 flex gap-2">
