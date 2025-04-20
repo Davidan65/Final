@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
 import { Filter, Star, ShoppingBag, Shield, Heart, Plus, Edit, Trash2 } from 'lucide-react';
+import { Spinner } from './Spinner';
 
 interface Accessory {
   _id: string;
@@ -42,6 +43,8 @@ export const PetAccessoriesPage: React.FC = () => {
     color: ''
   });
   const itemsPerPage = 8;
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     fetchAccessories();
@@ -53,6 +56,7 @@ export const PetAccessoriesPage: React.FC = () => {
   }, [currentPage]);
 
   const fetchAccessories = async () => {
+    setIsLoading(true);
     try {
       const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
       console.log('Fetching accessories from:', `${API_URL}/api/accessories`);
@@ -72,11 +76,14 @@ export const PetAccessoriesPage: React.FC = () => {
       setAccessories(data);
     } catch (error) {
       console.error('Error fetching accessories:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSaving(true);
     try {
       const token = localStorage.getItem('token');
       const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
@@ -110,6 +117,8 @@ export const PetAccessoriesPage: React.FC = () => {
       }
     } catch (error) {
       console.error('Error saving accessory:', error);
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -250,8 +259,8 @@ export const PetAccessoriesPage: React.FC = () => {
               Add New Accessory
             </button>
           )}
+          </div>
         </div>
-      </div>
 
       {/* Add/Edit Form */}
       {(isAdding || editingAccessory) && (
@@ -346,23 +355,38 @@ export const PetAccessoriesPage: React.FC = () => {
                     setEditingAccessory(null);
                   }}
                   className="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300"
+                  disabled={isSaving}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center gap-2"
+                  disabled={isSaving}
                 >
-                  {editingAccessory ? 'Update' : 'Add'}
+                  {isSaving ? (
+                    <>
+                      <Spinner size="small" color="text-white" />
+                      <span>Saving...</span>
+                    </>
+                  ) : (
+                    editingAccessory ? 'Update' : 'Add'
+                  )}
                 </button>
               </div>
             </form>
           </div>
         </div>
       )}
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-        {currentAccessories.map((accessory) => (
+
+      {/* Products Grid */}
+      {isLoading ? (
+        <div className="flex justify-center items-center min-h-[400px]">
+          <Spinner size="large" />
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+          {currentAccessories.map((accessory) => (
           <div key={accessory._id} className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full">
             <div className="relative h-48">
               <img
@@ -397,17 +421,18 @@ export const PetAccessoriesPage: React.FC = () => {
                 <p className="text-lg font-bold text-blue-600 mb-2">${accessory.price.toFixed(2)}</p>
               </div>
               <div className="mt-auto">
-                <button
-                  onClick={() => handleAddToCart(accessory)}
+              <button
+                onClick={() => handleAddToCart(accessory)}
                   className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors"
-                >
+              >
                   {isItemInCart(accessory._id) ? 'Remove from Cart' : 'Add to Cart'}
-                </button>
+              </button>
               </div>
             </div>
-          </div>
-        ))}
+            </div>
+          ))}
       </div>
+      )}
       {totalPages > 1 && (
         <div className="mt-8 flex justify-center gap-4">
           <button

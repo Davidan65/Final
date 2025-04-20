@@ -2,21 +2,25 @@ import { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
 import { Filter, Star, ShoppingBag, Shield, Heart, Plus, Edit, Trash2 } from 'lucide-react';
+import { Spinner } from './Spinner';
 
 interface PetFood {
-  _id: string;
+  id: number;
   name: string;
   description: string;
   price: number;
   image: string;
   category: string;
+  rating: number;
+  reviews: number;
   brand: string;
   weight: string;
-  ingredients?: string[];
-  nutritionalInfo?: {
+  ingredients: string[];
+  nutritionalInfo: {
     protein: string;
     fat: string;
     fiber: string;
+    moisture: string;
   };
 }
 
@@ -33,6 +37,8 @@ export const PetFoodPage: React.FC = () => {
   const [petFoods, setPetFoods] = useState<PetFood[]>([]);
   const [isAdding, setIsAdding] = useState(false);
   const [editingFood, setEditingFood] = useState<PetFood | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -53,8 +59,9 @@ export const PetFoodPage: React.FC = () => {
   }, [currentPage]);
 
   const fetchPetFoods = async () => {
+    setIsLoading(true);
     try {
-      const API_URL = 'https://final-2-1yn4.onrender.com';
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
       console.log('Fetching pet foods from:', `${API_URL}/api/pet-food`);
       const response = await fetch(`${API_URL}/api/pet-food`, {
         method: 'GET',
@@ -64,22 +71,25 @@ export const PetFoodPage: React.FC = () => {
         }
       });
       if (!response.ok) {
-        throw new Error('Failed to fetch pet food');
+        throw new Error(`Failed to fetch pet food: ${response.status} ${response.statusText}`);
       }
       const data = await response.json();
       setPetFoods(data);
     } catch (error) {
       console.error('Error fetching pet food:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSaving(true);
     try {
       const token = localStorage.getItem('token');
-      const API_URL = 'https://final-2-1yn4.onrender.com';
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
       const url = editingFood 
-        ? `${API_URL}/api/pet-food/${editingFood._id}`
+        ? `${API_URL}/api/pet-food/${editingFood.id}`
         : `${API_URL}/api/pet-food`;
       
       const response = await fetch(url, {
@@ -91,30 +101,34 @@ export const PetFoodPage: React.FC = () => {
         body: JSON.stringify(formData)
       });
 
-      if (response.ok) {
-        await fetchPetFoods();
-        setIsAdding(false);
-        setEditingFood(null);
-        setFormData({
-          name: '',
-          description: '',
-          price: '',
-          image: '',
-          category: '',
-          weight: ''
-        });
+      if (!response.ok) {
+        throw new Error(`Failed to save pet food: ${response.status} ${response.statusText}`);
       }
+
+      await fetchPetFoods();
+      setIsAdding(false);
+      setEditingFood(null);
+      setFormData({
+        name: '',
+        description: '',
+        price: '',
+        image: '',
+        category: '',
+        weight: ''
+      });
     } catch (error) {
       console.error('Error saving pet food:', error);
+    } finally {
+      setIsSaving(false);
     }
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: number) => {
     if (!window.confirm('Are you sure you want to delete this item?')) return;
     
     try {
       const token = localStorage.getItem('token');
-      const API_URL = 'https://final-2-1yn4.onrender.com';
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
       const response = await fetch(`${API_URL}/api/pet-food/${id}`, {
         method: 'DELETE',
         headers: {
@@ -158,15 +172,15 @@ export const PetFoodPage: React.FC = () => {
 
   const totalPages = Math.ceil(filteredPetFoods.length / itemsPerPage);
 
-  const isItemInCart = (id: string) => {
-    return items.some(item => item.id === id);
+  const isItemInCart = (id: number) => {
+    return items.some(item => item.id === id.toString());
   };
 
   const handleAddToCart = (food: PetFood) => {
-    if (isItemInCart(food._id)) {
-      removeItem(food._id);
+    if (isItemInCart(food.id)) {
+      removeItem(food.id.toString());
     } else {
-      addItem(food._id, food.name, food.price);
+      addItem(food.id.toString(), food.name, food.price);
     }
   };
 
@@ -321,14 +335,23 @@ export const PetFoodPage: React.FC = () => {
                     setEditingFood(null);
                   }}
                   className="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300"
+                  disabled={isSaving}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center gap-2"
+                  disabled={isSaving}
                 >
-                  {editingFood ? 'Update' : 'Add'}
+                  {isSaving ? (
+                    <>
+                      <Spinner size="small" color="text-white" />
+                      <span>Saving...</span>
+                    </>
+                  ) : (
+                    editingFood ? 'Update' : 'Add'
+                  )}
                 </button>
               </div>
             </form>
@@ -336,53 +359,60 @@ export const PetFoodPage: React.FC = () => {
         </div>
       )}
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-        {currentPetFoods.map((food) => (
-          <div key={food._id} className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full">
-            <div className="relative h-48">
-              <img
-                src={food.image}
-                alt={food.name}
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  e.currentTarget.src = 'https://images.unsplash.com/photo-1583511655826-05700442b31b?auto=format&fit=crop&q=80&w=300&h=200';
-                }}
-              />
-              {user?.role === 'admin' && (
-                <div className="absolute top-2 right-2 flex gap-2">
+      {/* Products Grid */}
+      {isLoading ? (
+        <div className="flex justify-center items-center min-h-[400px]">
+          <Spinner size="large" />
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+          {currentPetFoods.map((food) => (
+            <div key={food.id} className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full">
+              <div className="relative h-48">
+                <img
+                  src={food.image}
+                  alt={food.name}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.src = 'https://images.unsplash.com/photo-1583511655826-05700442b31b?auto=format&fit=crop&q=80&w=300&h=200';
+                  }}
+                />
+                {user?.role === 'admin' && (
+                  <div className="absolute top-2 right-2 flex gap-2">
+                    <button
+                      onClick={() => handleEdit(food)}
+                      className="p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600"
+                    >
+                      <Edit className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(food.id)}
+                      className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
+              </div>
+              <div className="p-4 flex flex-col flex-grow">
+                <h3 className="text-xl font-semibold mb-2">{food.name}</h3>
+                <div className="flex-grow">
+                  <p className="text-gray-600 mb-2 line-clamp-3">{food.description}</p>
+                  <p className="text-lg font-bold text-blue-600 mb-2">${food.price.toFixed(2)}</p>
+                </div>
+                <div className="mt-auto">
                   <button
-                    onClick={() => handleEdit(food)}
-                    className="p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600"
+                    onClick={() => handleAddToCart(food)}
+                    className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors"
                   >
-                    <Edit className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(food._id)}
-                    className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600"
-                  >
-                    <Trash2 className="w-4 h-4" />
+                    {isItemInCart(food.id) ? 'Remove from Cart' : 'Add to Cart'}
                   </button>
                 </div>
-              )}
-            </div>
-            <div className="p-4 flex flex-col flex-grow">
-              <h3 className="text-xl font-semibold mb-2">{food.name}</h3>
-              <div className="flex-grow">
-                <p className="text-gray-600 mb-2 line-clamp-3">{food.description}</p>
-                <p className="text-lg font-bold text-blue-600 mb-2">${food.price.toFixed(2)}</p>
-              </div>
-              <div className="mt-auto">
-                <button
-                  onClick={() => handleAddToCart(food)}
-                  className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors"
-                >
-                  {isItemInCart(food._id) ? 'Remove from Cart' : 'Add to Cart'}
-                </button>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
       {totalPages > 1 && (
         <div className="mt-8 flex justify-center gap-4">
           <button
