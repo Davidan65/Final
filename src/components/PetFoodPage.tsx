@@ -223,11 +223,17 @@ export const PetFoodPage: React.FC = () => {
 
   const isItemInCart = (id: number) => {
     if (!id) return false;
+    console.log('Checking if item is in cart:', { id, items });
     return items.some(item => item.id === id.toString());
   };
 
   const handleAddToCart = (food: PetFood) => {
-    if (!food || !food.id) return;
+    if (!food || !food.id) {
+      console.log('Invalid food item:', food);
+      return;
+    }
+    
+    console.log('Adding/removing from cart:', { food, isInCart: isItemInCart(food.id) });
     
     if (isItemInCart(food.id)) {
       removeItem(food.id.toString());
